@@ -26,53 +26,81 @@
                 <a class="navbar-item" href="index.html">Home</a>
                 <a class="navbar-item" href="about.html">About</a>
                 <a class="navbar-item" href="gallery.html">Gallery</a>
-                <!-- <a class="navbar-item" href="gallery-b.html">Gallery B</a> -->
                 <a class="navbar-item" href="shop.html">Shop</a>
                 <a class="navbar-item" href="contact.html">Contact</a>
             </div>
         </div>
     </nav>
-    <section class="section shop">
+
+    <section class="section shop" id="shopSection">
         <div class="container">
-            <!-- <h2 class="title has-text-centered">Category 1</h2> -->
-            <div class="columns is-multiline">
-                <div class="column is-one-third">
-                    <figure class="image box">
-                        <img src="product.webp" alt="De La Villa Hoodie">
-                    </figure>
-                    <div class="is-flex is-flex-direction-column is-align-items-center">
-                        <span class="subtitle has-text-white mb-4">$49.99</span>
-                        <a href="https://delavillaprod.myshopify.com/products/de-la-villa-hoodie" class="button is-primary has-text-white">Order Now</a>
-                    </div>
-                </div>
-                <!-- <div class="column is-one-third">
-                    <figure class="image box">
-                        <img src="product.webp" alt="Product 2">
-                    </figure>
-                    <div class="is-flex is-flex-direction-column is-align-items-center">
-                        <span class="subtitle has-text-white mb-4">$24.99</span>
-                        <button class="button is-primary has-text-white">Order Now</button>
-                    </div>
-                </div> -->
+            <!-- Shop Header with Countdown -->
+            <div class="shop-header has-text-centered pb-4">
+                <h2 class="title is-inline">Shop</h2>
+                <span class="shop-timer" id="shopTimer"></span>
+            </div>
+            
+            <!-- Loading state -->
+            <div id="loadingState" class="has-text-centered py-6">
+                <p class="subtitle">Loading products...</p>
+            </div>
+
+            <!-- Error state -->
+            <div id="errorState" class="has-text-centered py-6 is-hidden">
+                <p class="subtitle has-text-danger">Error loading products. Please try again later.</p>
+            </div>
+
+            <!-- Products grid -->
+            <div id="productsGrid" class="columns is-multiline is-hidden">
+                <!-- Products will be dynamically inserted here -->
             </div>
         </div>
     </section>
-    <!-- <section class="section shop">
-        <div class="container">
-            <h2 class="title has-text-centered">Category 2</h2>
-            <div class="columns is-multiline">
-                <div class="column is-one-third">
-                    <figure class="image box">
-                        <img src="product.webp" alt="Product 3">
-                    </figure>
-                    <div class="is-flex is-flex-direction-column is-align-items-center">
-                        <span class="subtitle has-text-white mb-4">$29.99</span>
-                        <button class="button is-primary has-text-white">Order Now</button>
-                    </div>
-                </div>
+
+    <!-- Shop Closed State -->
+    <section class="section shop-closed is-hidden" id="shopClosed">
+        <div class="container has-text-centered">
+            <div class="shop-closed-content">
+                <svg class="shop-closed-icon" xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <h2 class="title is-2 mt-5">Shop Closed</h2>
+                <p class="subtitle is-5 has-text-grey-light mt-3">Thank you for your interest. Our shop is currently closed.</p>
+                <p class="has-text-grey-light">Check back soon for new products!</p>
             </div>
         </div>
-    </section> -->
+    </section>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="cart-modal">
+        <div class="cart-modal-content">
+            <div class="cart-header">
+                <h3 class="title is-4">Your Cart</h3>
+                <button class="cart-close" id="cartClose">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="cart-body" id="cartBody">
+                <!-- Cart items will be dynamically inserted here -->
+            </div>
+
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span class="subtitle">Total:</span>
+                    <span class="subtitle" id="cartTotal">$0.00</span>
+                </div>
+                <button class="button is-primary is-fullwidth has-text-white" id="checkoutBtn">
+                    Proceed to Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer is-flex is-align-items-center is-justify-content-center mb-0 has-background-black">
         <div class="content has-text-centered">
             <p class="is-size-7">
@@ -80,6 +108,22 @@
             </p>
         </div>
     </footer>
+
+    <!-- Fixed Cart Button -->
+    <div class="fixed-cart-button" id="fixedCartButton">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <span class="cart-count" id="cartCount">0</span>
+    </div>
+
+    <!-- Scripts - ORDER MATTERS! -->
+    <script src="config.js"></script>
+    <script src="shopify-api.js"></script>
+    <script src="cart-manager.js"></script>
+    <script src="shop.js"></script>
     <script src="script.js"></script>
 </body>
 
