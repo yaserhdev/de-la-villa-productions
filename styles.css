@@ -21762,14 +21762,14 @@ img {
   gap: 2rem;
 }
 
-.contact button,
-.shop button {
+.contact a,
+.shop a {
   border: 1px solid #353a46;
   background-color: #14161a;
   transition: all 0.3s ease;
 }
-.contact button:hover,
-.shop button:hover {
+.contact a:hover,
+.shop a:hover {
   background-color: #1f2228;
   border-color: #5a5f6d;
   transform: translateY(-2px);

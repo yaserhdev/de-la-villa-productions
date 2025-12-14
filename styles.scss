@@ -24,37 +24,6 @@ img {
     border-radius: 7px;
 }
 
-// .navbar-item {
-//     color: white;
-//     position: relative;
-//     transition: all 0.3s ease;
-    
-//     &:hover {
-//         background-color: rgba(255, 255, 255, 0.1);
-//         color: #BFBFBF;
-//     }
-    
-//     &::after {
-//         content: '';
-//         position: absolute;
-//         bottom: 8px; // Adjust this value to position it right under the text
-//         left: 50%;
-//         width: 0;
-//         height: 2px;
-//         background-color: #BFBFBF;
-//         transition: all 0.3s ease;
-//         transform: translateX(-50%);
-//     }
-    
-//     &:hover::after {
-//         width: 80%;
-//     }
-// }
-
-// .navbar-burger:hover {
-//     background-color: rgba(255, 255, 255, 0.1);
-// }
-
 // Target only navbar menu items, not the logo
 .navbar-menu .navbar-item {
     color: white;
@@ -267,8 +236,8 @@ img {
     gap: 2rem;
 }
 
-.contact button,
-.shop button {
+.contact a,
+.shop a {
     border: 1px solid #353a46;
     background-color: #14161a;
     transition: all 0.3s ease;
