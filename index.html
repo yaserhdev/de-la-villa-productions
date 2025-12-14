@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" class="has-background-black">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>De La Villa Productions - Home</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="has-navbar-fixed-top is-flex is-flex-direction-column has-text-white">
+    <nav class="navbar is-fixed-top has-background-black" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand is-size-6-mobile is-size-5-desktop">
+            <a class="navbar-item" href="index.html">
+                <img src="./logo.png">
+            </a>
+            <a role="button" class="navbar-burger has-text-white" aria-label="menu" aria-expanded="false"
+                data-target="navbarMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div id="navbarMenu" class="navbar-menu">
+            <div class="navbar-end">
+                <a class="navbar-item" href="index.html">Home</a>
+                <a class="navbar-item" href="about.html">About</a>
+                <a class="navbar-item" href="gallery.html">Gallery</a>
+                <!-- <a class="navbar-item" href="gallery-b.html">Gallery B</a> -->
+                <a class="navbar-item" href="shop.html">Shop</a>
+                <a class="navbar-item" href="contact.html">Contact</a>
+            </div>
+        </div>
+    </nav>
+    <section class="hero video-background is-relative">
+        <video id="homeVideo" class="is-h-100 is-w-100" autoplay muted loop playsinline>
+            <source src="graffiti.mov" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <button id="unmuteBtn" class="unmute-btn muted">
+            <!-- Muted icon (X through speaker) -->
+            <svg class="icon-muted" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <line x1="23" y1="9" x2="17" y2="15"></line>
+                <line x1="17" y1="9" x2="23" y2="15"></line>
+            </svg>
+            <!-- Unmuted icon (speaker with waves) -->
+            <svg class="icon-unmuted" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+        </button>
+        <div class="is-flex is-align-items-center is-justify-content-center video-text">
+            <div class="has-text-centered">
+                <button
+                    id="shopNowBtn"
+                    class="button is-primary is-large is-size-6-mobile is-size-5-tablet is-size-4-desktop has-text-black is-hidden">Shop
+                    Now
+                </button>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container has-text-centered">
+            <p class="pt-5">Ignite your vision with De La Villa Productions—where bold stories explode onto the screen,
+                crafted by passionate creators who turn ideas into cinematic magic!</p>
+        </div>
+    </section>
+    <footer class="footer is-flex is-align-items-center is-justify-content-center mb-0 has-background-black">
+        <div class="content has-text-centered">
+            <p class="is-size-7">
+                &copy; 2025 De La Villa Productions &times; <a href="https://www.creadevdesign.com/" target="_blank" class="creadev-link">CreaDev Design</a>
+            </p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+
+</html>

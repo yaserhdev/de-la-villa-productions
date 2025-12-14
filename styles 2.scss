@@ -1,0 +1,170 @@
+// Override Bulma's breakpoint variables
+$small: 600px;
+$medium: 725px;
+$large: 875px;
+$xl: 1050px;
+
+@use "bulma/sass" with (
+  $tablet: $small,
+  $desktop: $medium,
+  $widescreen: $large,
+  $fullhd: $xl
+);
+
+// Your existing custom styles (paste them here exactly as they were)
+body {
+    min-height: 100vh;
+}
+
+img {
+    border-radius: 7px;
+}
+
+.navbar-item {
+    color: white;
+}
+
+.video-background {
+    overflow: hidden;
+}
+
+.video-background video {
+    object-fit: cover;
+}
+
+.video-text {
+    position: absolute; 
+    z-index: 1; 
+    height: 100%;
+    width: 100%;
+    background-color: rgb(0, 0, 0, 0.25);
+}
+
+.unmute-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    transition: all 0.3s ease;
+    z-index: 10;
+    border: none; /* Remove default button border */
+    outline: none; /* Remove default button outline */
+}
+
+.unmute-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+}
+
+/* Prevent SVG from blocking clicks */
+.unmute-btn svg {
+    pointer-events: none;
+}
+
+/* Show muted icon by default */
+.unmute-btn.muted .icon-muted {
+    display: block;
+}
+
+.unmute-btn.muted .icon-unmuted {
+    display: none;
+}
+
+/* Show unmuted icon when not muted */
+.unmute-btn:not(.muted) .icon-muted {
+    display: none;
+}
+
+.unmute-btn:not(.muted) .icon-unmuted {
+    display: block;
+}
+
+#shopNowBtn {
+    background-color: #BFBFBF;
+}
+
+.projects .columns.is-multiline,
+.shop .columns.is-multiline {
+    justify-content: center;
+}
+
+.projects .column,
+.shop .column {
+    display: flex;
+    flex-direction: column;
+}
+
+.projects .title {
+    min-height: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+.iframe-container {
+    flex-grow: 1;
+    position: relative;
+    overflow: hidden;
+    padding-top: 56.25%;
+}
+
+.iframe-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.social-icons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.footer {
+  margin-top: auto;
+  padding: 0.5rem 1.5rem;
+  min-height: 3.25rem;
+}
+
+@media (max-width: 599px) {
+  .is-narrow {
+    padding-top: 22px;
+  }
+  .social-icons {
+    flex-direction: row;
+  }
+  div:has(> #shopNowBtn) {
+    padding-top: 40%;
+  }
+  .mixtape-tour p {
+    padding-top: 25%;
+  }
+}
+
+@media (min-width: 600px) {
+  .is-narrow {
+    padding-top: 44px;
+    padding-right: 44px;
+  }
+  div:has(> #shopNowBtn) {
+    padding-top: 35%;
+  }
+  .mixtape-tour p {
+    padding-top: 15%;
+  }
+}
