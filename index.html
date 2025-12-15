@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>De La Villa Productions - Home</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Prevent FOUC */
+        body { opacity: 0; }
+    </style>
 </head>
 
 <body class="has-navbar-fixed-top is-flex is-flex-direction-column has-text-white">
@@ -62,8 +66,7 @@
     </section>
     <section class="section">
         <div class="container has-text-centered">
-            <p class="pt-5">Ignite your vision with De La Villa Productions—where bold stories explode onto the screen,
-                crafted by passionate creators who turn ideas into cinematic magic!</p>
+            <p class="pt-5">Creative team that focuses on branding and marketing through visual storytelling.</p>
         </div>
     </section>
     <footer class="footer is-flex is-align-items-center is-justify-content-center mb-0 has-background-black">
@@ -73,6 +76,13 @@
             </p>
         </div>
     </footer>
+    <script>
+        // Show body once loaded
+        window.addEventListener('DOMContentLoaded', () => {
+            document.body.style.opacity = '1';
+            document.body.style.transition = 'opacity 0.2s ease-in';
+        });
+    </script>
     <script src="script.js"></script>
 </body>
 

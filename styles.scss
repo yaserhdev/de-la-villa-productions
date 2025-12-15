@@ -152,6 +152,68 @@ img {
     }
 }
 
+// About Page Styles
+.about-section {
+  .about-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #BFBFBF;
+  }
+
+  .about-images-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .founder-card {
+    .image {
+      border-radius: 8px;
+      overflow: hidden;
+      
+      img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+    }
+
+    .founder-name {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: white;
+    }
+  }
+
+  // Mobile: text comes first, images second (already default with Bulma)
+  // Desktop: images on left (25%), text on right (75%)
+  @media screen and (max-width: 599px) {
+    .about-text-column {
+      order: 1; // Text first on mobile
+    }
+
+    .about-images-column {
+      order: 2; // Images second on mobile
+      margin-top: 3rem;
+      
+      .founder-card {
+        max-width: 300px;
+        margin: 0 auto;
+      }
+    }
+  }
+
+  @media screen and (min-width: 600px) {
+    .about-text-column {
+      order: 2; // Text on right on desktop
+    }
+
+    .about-images-column {
+      order: 1; // Images on left on desktop
+    }
+  }
+}
+
 .tabs {
   li.is-active a {
     border-bottom-color: #BFBFBF;
