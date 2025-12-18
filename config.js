@@ -13,7 +13,7 @@ const SHOPIFY_CONFIG = {
   
   // Shop opening date (ISO 8601 format: YYYY-MM-DDTHH:MM:SS)
   // Shop will be closed with countdown until this date
-  shopOpeningDate: '2025-12-17T20:00:00',
+  shopOpeningDate: '2025-12-18T20:00:00',
   
   // Shop closing date (ISO 8601 format: YYYY-MM-DDTHH:MM:SS)
   // Shop will close at this date and show closed message

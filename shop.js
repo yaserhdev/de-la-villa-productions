@@ -25,12 +25,82 @@ document.addEventListener('DOMContentLoaded', async () => {
   shopifyAPI = new ShopifyAPI(SHOPIFY_CONFIG);
   cartManager = new CartManager();
   
+  // Validate cart items against current stock
+  await validateCart();
+  
   updateCartUI();
   cartManager.subscribe(updateCartUI);
   
   await loadProducts();
   setupCartModal();
+  
+  // Reset checkout button if user came back from Shopify
+  resetCheckoutButton();
 });
+
+// Validate cart items against live Shopify data
+async function validateCart() {
+  const items = cartManager.getItems();
+  if (items.length === 0) return;
+  
+  try {
+    const products = await shopifyAPI.getProducts();
+    const updatedItems = [];
+    const removedItems = [];
+    
+    items.forEach(cartItem => {
+      // Find the product and variant in current Shopify data
+      const product = products.find(p => p.id === cartItem.productId);
+      
+      if (!product) {
+        removedItems.push(cartItem.title);
+        return;
+      }
+      
+      const variant = product.variants.find(v => v.id === cartItem.variantId);
+      
+      if (!variant || !variant.available) {
+        removedItems.push(`${cartItem.title}${cartItem.variantTitle ? ` (${cartItem.variantTitle})` : ''}`);
+        return;
+      }
+      
+      // Check if quantity exceeds available stock
+      if (cartItem.quantity > variant.quantityAvailable) {
+        cartItem.quantity = variant.quantityAvailable;
+      }
+      
+      updatedItems.push(cartItem);
+    });
+    
+    // Update cart with validated items
+    if (removedItems.length > 0 || updatedItems.length !== items.length) {
+      cartManager.items = updatedItems;
+      cartManager.saveCart();
+      
+      // Notify user of changes
+      if (removedItems.length > 0) {
+        const message = removedItems.length === 1
+          ? `"${removedItems[0]}" is no longer available and was removed from your cart.`
+          : `The following items are no longer available and were removed from your cart:\n${removedItems.map(item => `• ${item}`).join('\n')}`;
+        
+        // Show notification after a brief delay so page loads first
+        setTimeout(() => alert(message), 500);
+      }
+    }
+  } catch (error) {
+    console.error('Error validating cart:', error);
+    // Don't fail silently - keep cart as is if validation fails
+  }
+}
+
+// Reset checkout button state
+function resetCheckoutButton() {
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  if (checkoutBtn) {
+    checkoutBtn.disabled = false;
+    checkoutBtn.textContent = 'Proceed to Checkout';
+  }
+}
 
 // Determine shop status
 function getShopStatus() {
@@ -328,6 +398,10 @@ function openCartModal() {
   const modal = document.getElementById('cartModal');
   modal.classList.add('is-active');
   document.body.style.overflow = 'hidden';
+  
+  // Reset checkout button when opening cart
+  resetCheckoutButton();
+  
   updateCartModal();
 }
 

@@ -3,6 +3,7 @@ $small: 600px;
 $medium: 725px;
 $large: 875px;
 $xl: 1050px;
+$family-primary: 'Helvetica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
 @use "bulma/sass" with (
   $tablet: $small,
@@ -13,8 +14,40 @@ $xl: 1050px;
   $scheme-main: #000000,
   $body-background-color: #000000,
   $footer-background-color: #000000,
-  $link: #BFBFBF
+  $link: #BFBFBF,
+  $family-primary: $family-primary
 );
+
+// ============================================
+// CUSTOM FONTS
+// ============================================
+@font-face {
+  font-family: 'Helvetica';
+  src: url('./fonts/Helvetica.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Helvetica';
+  src: url('./fonts/Helvetica-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Helvetica';
+  src: url('./fonts/Helvetica-Oblique.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Helvetica';
+  src: url('./fonts/Helvetica-BoldOblique.ttf') format('truetype');
+  font-weight: bold;
+  font-style: italic;
+}
 
 // Your existing custom styles (paste them here exactly as they were)
 body {
