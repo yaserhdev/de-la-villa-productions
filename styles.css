@@ -21817,6 +21817,25 @@ img {
   border-radius: 8px;
 }
 
+.iframe-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  margin-bottom: 30px;
+}
+.iframe-container::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 30px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.05), transparent);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent);
+  border-radius: 8px 8px 0 0;
+}
+
 .shop h2 {
   margin-bottom: 0px !important;
 }
@@ -22194,9 +22213,61 @@ img {
 .social-icons {
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
+}
+@media (max-width: 600px) {
+  .social-icons {
+    align-items: center;
+  }
+}
+@media (min-width: 601px) {
+  .social-icons {
+    align-items: flex-start;
+  }
+}
+.social-icons a {
+  color: #BFBFBF !important;
+  transition: color 0.3s ease;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
+  width: 48px;
+  height: 48px;
+}
+.social-icons a:hover {
+  color: white !important;
+}
+.social-icons a[title=Instagram]:hover {
+  color: #E4405F !important;
+}
+.social-icons a[title=YouTube]:hover {
+  color: #FF0000 !important;
+}
+.social-icons a[title=TikTok]:hover {
+  color: #00f2ea !important;
+}
+.social-icons svg {
+  width: 32px;
+  height: 32px;
+  color: inherit;
+}
+.social-icons i {
+  font-size: 2rem !important;
+}
+
+.social-icon-svg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+}
+.social-icon-svg svg {
+  color: #BFBFBF;
+  transition: color 0.3s ease;
+}
+.social-icon-svg:hover svg {
+  color: white;
 }
 
 .contact button,

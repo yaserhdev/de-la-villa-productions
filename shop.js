@@ -3,39 +3,55 @@
 let shopifyAPI;
 let cartManager;
 let countdownInterval;
+let openingCountdownInterval;
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // Check if shop is closed first
-  if (isShopClosed()) {
+  const shopStatus = getShopStatus();
+  
+  if (shopStatus === 'not-yet-open') {
+    showShopOpening();
+    startOpeningCountdown();
+    return;
+  }
+  
+  if (shopStatus === 'closed') {
     showShopClosed();
     return;
   }
-
-  // Initialize countdown timer
+  
+  // Shop is open - proceed normally
   startCountdown();
-
-  // Initialize Shopify API and Cart Manager
+  
   shopifyAPI = new ShopifyAPI(SHOPIFY_CONFIG);
   cartManager = new CartManager();
-
-  // Update cart count on load
+  
   updateCartUI();
-
-  // Subscribe to cart changes
   cartManager.subscribe(updateCartUI);
-
-  // Load products
+  
   await loadProducts();
-
-  // Setup cart modal
   setupCartModal();
 });
 
-// Check if shop is closed
-function isShopClosed() {
-  const closingDate = new Date(SHOPIFY_CONFIG.shopClosingDate);
+// Determine shop status
+function getShopStatus() {
   const now = new Date();
-  return now >= closingDate;
+  const openingDate = new Date(SHOPIFY_CONFIG.shopOpeningDate);
+  const closingDate = new Date(SHOPIFY_CONFIG.shopClosingDate);
+  
+  if (now < openingDate) {
+    return 'not-yet-open';
+  } else if (now >= closingDate) {
+    return 'closed';
+  } else {
+    return 'open';
+  }
+}
+
+// Show shop opening soon state
+function showShopOpening() {
+  document.getElementById('shopSection').classList.add('is-hidden');
+  document.getElementById('shopOpeningSoon').classList.remove('is-hidden');
+  document.getElementById('fixedCartButton').classList.add('is-hidden');
 }
 
 // Show shop closed state
@@ -45,7 +61,37 @@ function showShopClosed() {
   document.getElementById('fixedCartButton').classList.add('is-hidden');
 }
 
-// Start countdown timer
+// Start opening countdown timer
+function startOpeningCountdown() {
+  const openingDate = new Date(SHOPIFY_CONFIG.shopOpeningDate);
+  const countdownText = document.getElementById('openingCountdownText');
+  
+  function updateOpeningTimer() {
+    const now = new Date();
+    const diff = openingDate - now;
+    
+    if (diff <= 0) {
+      // Shop is now open - reload page
+      clearInterval(openingCountdownInterval);
+      window.location.reload();
+      return;
+    }
+    
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    const formattedTime = `${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    
+    countdownText.textContent = `The shop will be open in ${formattedTime}`;
+  }
+  
+  updateOpeningTimer();
+  openingCountdownInterval = setInterval(updateOpeningTimer, 1000);
+}
+
+// Start countdown timer (while shop is open)
 function startCountdown() {
   const timerElement = document.getElementById('shopTimer');
   const closingDate = new Date(SHOPIFY_CONFIG.shopClosingDate);
@@ -55,25 +101,21 @@ function startCountdown() {
     const diff = closingDate - now;
 
     if (diff <= 0) {
-      // Shop is now closed
       clearInterval(countdownInterval);
       showShopClosed();
       return;
     }
 
-    // Calculate time remaining
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-    // Format as DD:HH:MM:SS
     const formattedTime = `${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     
     timerElement.textContent = `Limited Drop [${formattedTime}]`;
   }
 
-  // Update immediately and then every second
   updateTimer();
   countdownInterval = setInterval(updateTimer, 1000);
 }
@@ -87,12 +129,6 @@ async function loadProducts() {
   try {
     const products = await shopifyAPI.getProducts();
 
-    // TEMPORARY: Log to see what we're getting
-    console.log('Product descriptions:', products.map(p => ({
-      title: p.title,
-      description: p.description
-    })));
-
     loadingState.classList.add('is-hidden');
     productsGrid.classList.remove('is-hidden');
 
@@ -103,7 +139,6 @@ async function loadProducts() {
 
     productsGrid.innerHTML = products.map(product => createProductCard(product)).join('');
 
-    // Add event listeners for variant selects
     document.querySelectorAll('.variant-select').forEach(select => {
       select.addEventListener('change', (e) => {
         const variantId = e.target.value;
@@ -114,21 +149,17 @@ async function loadProducts() {
         const addToCartBtn = card.querySelector('.add-to-cart-btn');
         const quantitySelect = card.querySelector('.quantity-select');
         
-        // Update button variant ID
         addToCartBtn.dataset.variantId = variantId;
         
-        // Update quantity dropdown based on stock
         quantitySelect.innerHTML = Array.from({length: stock}, (_, i) => i + 1)
           .map(num => `<option value="${num}">${num}</option>`)
           .join('');
         
-        // Reset quantity to 1
         quantitySelect.value = '1';
         addToCartBtn.dataset.quantity = '1';
       });
     });
 
-    // Add event listeners for quantity selects
     document.querySelectorAll('.quantity-select').forEach(select => {
       select.addEventListener('change', (e) => {
         const quantity = e.target.value;
@@ -138,7 +169,6 @@ async function loadProducts() {
       });
     });
 
-    // Add event listeners to "Add to Cart" buttons
     document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
       btn.addEventListener('click', handleAddToCart);
     });
@@ -150,18 +180,15 @@ async function loadProducts() {
   }
 }
 
-// Add this function before createProductCard
 function formatDescription(desc) {
   if (!desc) return '';
   
-  // Split by dash with spaces around it
   const parts = desc.split(' - ');
   
   if (parts.length <= 1) {
-    return desc; // Return as-is if no dashes
+    return desc;
   }
   
-  // First part is title, rest are bullets
   const title = parts[0].trim();
   const bullets = parts.slice(1).map(item => item.trim());
   
@@ -173,13 +200,11 @@ function formatDescription(desc) {
   `;
 }
 
-// Create product card HTML
 function createProductCard(product) {
   const defaultVariant = product.variants[0];
   const imageSrc = product.images[0]?.url || 'https://via.placeholder.com/400x400?text=No+Image';
   const priceFormatted = shopifyAPI.formatPrice(product.price, product.currencyCode);
   
-  // Check if product has multiple variants (sizes)
   const hasVariants = product.variants.length > 1 && product.variants[0].title !== 'Default Title';
 
   return `
@@ -245,7 +270,6 @@ function createProductCard(product) {
   `;
 }
 
-// Handle add to cart
 function handleAddToCart(e) {
   const btn = e.currentTarget;
   const product = JSON.parse(btn.dataset.product);
@@ -255,13 +279,11 @@ function handleAddToCart(e) {
   try {
     cartManager.addItem(product, variantId, quantity);
     
-    // Visual feedback
     btn.textContent = 'Added!';
     setTimeout(() => {
       btn.textContent = 'Add to Cart';
     }, 1500);
 
-    // Open cart modal
     openCartModal();
 
   } catch (error) {
@@ -270,7 +292,6 @@ function handleAddToCart(e) {
   }
 }
 
-// Update cart UI
 function updateCartUI() {
   const cartCount = document.getElementById('cartCount');
   const count = cartManager.getItemCount();
@@ -281,7 +302,6 @@ function updateCartUI() {
   updateCartModal();
 }
 
-// Setup cart modal
 function setupCartModal() {
   const modal = document.getElementById('cartModal');
   const fixedCartButton = document.getElementById('fixedCartButton');
@@ -304,7 +324,6 @@ function setupCartModal() {
   checkoutBtn.addEventListener('click', handleCheckout);
 }
 
-// Open cart modal
 function openCartModal() {
   const modal = document.getElementById('cartModal');
   modal.classList.add('is-active');
@@ -312,14 +331,12 @@ function openCartModal() {
   updateCartModal();
 }
 
-// Close cart modal
 function closeCartModal() {
   const modal = document.getElementById('cartModal');
   modal.classList.remove('is-active');
   document.body.style.overflow = '';
 }
 
-// Update cart modal content
 function updateCartModal() {
   const cartBody = document.getElementById('cartBody');
   const cartTotal = document.getElementById('cartTotal');
@@ -355,7 +372,6 @@ function updateCartModal() {
 
   cartTotal.textContent = shopifyAPI.formatPrice(cartManager.getTotal());
 
-  // Add event listeners for quantity changes and remove buttons
   document.querySelectorAll('.quantity-btn').forEach(btn => {
     btn.addEventListener('click', handleQuantityChange);
   });
@@ -365,7 +381,6 @@ function updateCartModal() {
   });
 }
 
-// Handle quantity change
 function handleQuantityChange(e) {
   const variantId = e.currentTarget.dataset.variantId;
   const action = e.currentTarget.dataset.action;
@@ -377,13 +392,11 @@ function handleQuantityChange(e) {
   cartManager.updateQuantity(variantId, newQuantity);
 }
 
-// Handle remove item
 function handleRemoveItem(e) {
   const variantId = e.currentTarget.dataset.variantId;
   cartManager.removeItem(variantId);
 }
 
-// Handle checkout
 async function handleCheckout() {
   const checkoutBtn = document.getElementById('checkoutBtn');
   const items = cartManager.getItems();
@@ -404,10 +417,7 @@ async function handleCheckout() {
 
     const checkout = await shopifyAPI.createCheckout(lineItems);
 
-    // Clear cart before redirecting
     cartManager.clear();
-
-    // Redirect to Shopify checkout
     window.location.href = checkout.webUrl;
 
   } catch (error) {
@@ -416,10 +426,4 @@ async function handleCheckout() {
     checkoutBtn.disabled = false;
     checkoutBtn.textContent = 'Proceed to Checkout';
   }
-}
-
-// Utility: Truncate text
-function truncateText(text, maxLength) {
-  if (text.length <= maxLength) return text;
-  return text.substring(0, maxLength) + '...';
 }
