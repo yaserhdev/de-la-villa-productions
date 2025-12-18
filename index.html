@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>De La Villa Productions - Home</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./css/styles.css">
     <style>
         /* Prevent FOUC */
         body { opacity: 0; }
@@ -16,7 +16,7 @@
     <nav class="navbar is-fixed-top has-background-black" role="navigation" aria-label="main navigation">
         <div class="navbar-brand is-size-6-mobile is-size-5-desktop">
             <a class="navbar-item" href="index.html">
-                <img src="./logo.png">
+                <img src="./assets/logo.png">
             </a>
             <a role="button" class="navbar-burger has-text-white" aria-label="menu" aria-expanded="false"
                 data-target="navbarMenu">
@@ -38,7 +38,7 @@
     </nav>
     <section class="hero video-background is-relative">
         <video id="homeVideo" class="is-h-100 is-w-100" autoplay muted loop playsinline>
-            <source src="graffiti.mp4" type="video/mp4">
+            <source src="./assets/graffiti.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         <button id="unmuteBtn" class="unmute-btn muted">
@@ -83,7 +83,7 @@
             document.body.style.transition = 'opacity 0.2s ease-in';
         });
     </script>
-    <script src="script.js"></script>
+    <script src="./js/script.js"></script>
 </body>
 
 </html>
