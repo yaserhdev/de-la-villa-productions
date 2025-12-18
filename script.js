@@ -63,4 +63,51 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  const contactForm = document.querySelector('form[action*="formspree"]');
+  const successModal = document.getElementById('success-modal');
+  const closeModalBtn = document.getElementById('close-success-modal');
+  const modalClose = successModal?.querySelector('.modal-close');
+
+  if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(contactForm);
+
+      try {
+        const response = await fetch(contactForm.action, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          // Show success modal
+          successModal.classList.add('is-active');
+          // Reset form
+          contactForm.reset();
+        } else {
+          alert('Oops! There was a problem submitting your form');
+        }
+      } catch (error) {
+        alert('Oops! There was a problem submitting your form');
+      }
+    });
+
+    // Close modal handlers
+    if (closeModalBtn) {
+      closeModalBtn.addEventListener('click', () => {
+        successModal.classList.remove('is-active');
+      });
+    }
+
+    if (modalClose) {
+      modalClose.addEventListener('click', () => {
+        successModal.classList.remove('is-active');
+      });
+    }
+  }
 });

@@ -155,15 +155,26 @@ img {
 // About Page Styles
 .about-section {
   .about-text {
-    font-size: 1rem;
-    line-height: 1.8;
-    color: #BFBFBF;
+    font-size: 0.9rem; // Size 7 (< 725px)
+    
+    @media (min-width: 725px) and (max-width: 874px) {
+        font-size: 1rem; // Size 6 (725-874px) - ONE SIZE SMALLER
+    }
+    
+    @media (min-width: 875px) and (max-width: 1049px) {
+        font-size: 1.15rem; // Size 5 (875-1049px)
+    }
+    
+    @media (min-width: 1050px) {
+        font-size: 1.3rem; // Size 4 (1050px+)
+    }
   }
 
   .about-images-column {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 2rem;
   }
 
   .founder-card {
@@ -194,7 +205,6 @@ img {
 
     .about-images-column {
       order: 2; // Images second on mobile
-      margin-top: 3rem;
       
       .founder-card {
         max-width: 300px;
@@ -249,46 +259,47 @@ img {
     justify-content: center;
   }
 
+// Gallery iframe styling
 .iframe-container {
-    flex-grow: 1;
-    position: relative;
-    overflow: hidden;
-    padding-top: 56.25%;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 8px;
-    
+  position: relative;
+  padding-bottom: 56.25%; // 16:9 aspect ratio
+  height: 0;
+  overflow: hidden;
+  border-radius: 8px; // Added border radius
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none; // Remove any default border
+    border-radius: 8px; // Match container radius
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
+
     &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, rgba(191, 191, 191, 0.1), transparent);
-        opacity: 0;
-        transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        pointer-events: none;
-        z-index: 1;
+      opacity: 1;
     }
-    
-    &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
-        
-        &::after {
-            opacity: 1;
-        }
-    }
-    
-    iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: 0;
-        border-radius: 8px;
-    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(191, 191, 191, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    border-radius: 8px;
+  }
 }
 
 // Shop & Cart Styles
@@ -347,16 +358,23 @@ img {
 }
 
 // Product cards
-// Remove hover effect from product cards
 .product-card {
   display: flex;
   flex-direction: column;
   height: 100%;
 
+  .product-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; // This centers everything vertically
+  }
+
   .product-image {
     border-radius: 8px;
     overflow: hidden;
     margin-bottom: 1rem;
+    border: none; // Remove any border
 
     img {
       width: 100%;
@@ -369,41 +387,90 @@ img {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    // justify-content: space-between;
   }
 
-  .product-description {
-    color: #bfbfbf;
-    font-size: 0.9rem;
-    line-height: 1.4;
+// Product description styling - FORCE list styling
+.product-description {
+  color: #bfbfbf !important;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  text-align: left !important; // Force left align
+  padding: 0 1rem; // Add some horizontal padding
+  
+  ul {
+    display: block !important;
+    list-style-type: disc !important;
+    margin-left: 1.5rem !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.75rem !important;
+    padding-left: 0.5rem !important;
   }
+  
+  li {
+    display: list-item !important;
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    margin-bottom: 0.35rem !important;
+    margin-left: 0 !important;
+    text-align: left !important;
+  }
+  
+  p {
+    margin-bottom: 0.75rem;
+  }
+
+  // Reset any Bulma overrides
+  * {
+    text-align: left !important;
+  }
+}
 
   .add-to-cart-btn {
     min-width: 150px;
+    border: 1px solid #353a46;
+    background-color: #14161a;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: #1f2228;
+      border-color: #5a5f6d;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
   }
 
-  // Variant selectors side by side
   .variant-selectors {
     display: flex;
     gap: 1rem;
     width: 100%;
     justify-content: center;
+    align-items: flex-end;
 
     .field {
       margin-bottom: 0;
+      text-align: center;
 
       .label {
         font-size: 0.875rem;
         margin-bottom: 0.25rem;
+        text-align: center;
       }
 
       .select select {
         background-color: #14161a;
         border-color: #353a46;
         color: white;
+        text-align: center;
+        padding-right: 2.5em;
 
         &:hover {
           border-color: #5a5f6d;
+        }
+
+        &:focus {
+          border-color: #BFBFBF;
+          box-shadow: 0 0 0 0.125em rgba(191, 191, 191, 0.25);
         }
 
         option {
@@ -675,7 +742,7 @@ img {
     gap: 2rem;
 }
 
-.contact a,
+.contact button,
 .shop a {
     border: 1px solid #353a46;
     background-color: #14161a;
@@ -687,6 +754,49 @@ img {
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
+}
+
+// Success Modal
+#success-modal {
+  .modal-background {
+    background-color: rgba(0, 0, 0, 0.75);
+  }
+
+  .modal-content {
+    max-width: 500px !important;
+    margin: 0 auto !important;
+    padding: 0 1.5rem !important; // This adds the side padding
+    width: calc(100% - 3rem) !important; // Ensures padding on both sides
+  }
+
+  .box {
+    background-color: #f4ede2;
+    border: 2px solid #353a46;
+    padding: 2rem;
+    width: 100%;
+    
+    .title {
+      color: #000;
+    }
+
+    .button {
+      background-color: #14161a;
+      border: 1px solid #353a46;
+      color: white;
+
+      &:hover {
+        background-color: #1f2228;
+        border-color: #5a5f6d;
+      }
+    }
+  }
+
+  // Mobile specific
+  @media screen and (max-width: 768px) {
+    .box {
+      padding: 1.5rem;
+    }
+  }
 }
 
 .footer {

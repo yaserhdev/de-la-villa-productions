@@ -51,28 +51,28 @@
                     </div>
                 </div>
                 <div class="column contact">
-                    <form>
+                    <form action="https://formspree.io/f/xlgrrjrq" method="POST">
                         <div class="field">
                             <label class="label">Name</label>
                             <div class="control">
-                                <input class="input" type="text" placeholder="Your Name">
+                                <input class="input" type="text" placeholder="Your Name" name="name">
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Email</label>
                             <div class="control">
-                                <input class="input" type="email" placeholder="Your Email">
+                                <input class="input" type="email" placeholder="Your Email" name="email">
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Message</label>
                             <div class="control">
-                                <textarea class="textarea" placeholder="Your Message"></textarea>
+                                <textarea class="textarea" placeholder="Your Message" name="message"></textarea>
                             </div>
                         </div>
                         <div class="field pt-5">
                             <div class="control">
-                                <a class="button is-primary has-text-white">Submit</a>
+                                <button type="submit" class="button is-primary has-text-white">Submit</button>
                             </div>
                         </div>
                     </form>
@@ -87,6 +87,18 @@
             </p>
         </div>
     </footer>
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box has-text-centered">
+                <h3 class="title is-4">Message Sent!</h3>
+                <p class="mb-4">Thank you for reaching out. We'll get back to you soon.</p>
+                <button class="button is-primary" id="close-success-modal">Close</button>
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
     <script src="script.js"></script>
 </body>
 

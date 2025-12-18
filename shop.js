@@ -70,7 +70,7 @@ function startCountdown() {
     // Format as DD:HH:MM:SS
     const formattedTime = `${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     
-    timerElement.textContent = `for ${formattedTime}`;
+    timerElement.textContent = `Limited Drop [${formattedTime}]`;
   }
 
   // Update immediately and then every second
@@ -86,6 +86,12 @@ async function loadProducts() {
 
   try {
     const products = await shopifyAPI.getProducts();
+
+    // TEMPORARY: Log to see what we're getting
+    console.log('Product descriptions:', products.map(p => ({
+      title: p.title,
+      description: p.description
+    })));
 
     loadingState.classList.add('is-hidden');
     productsGrid.classList.remove('is-hidden');
@@ -144,6 +150,29 @@ async function loadProducts() {
   }
 }
 
+// Add this function before createProductCard
+function formatDescription(desc) {
+  if (!desc) return '';
+  
+  // Split by dash with spaces around it
+  const parts = desc.split(' - ');
+  
+  if (parts.length <= 1) {
+    return desc; // Return as-is if no dashes
+  }
+  
+  // First part is title, rest are bullets
+  const title = parts[0].trim();
+  const bullets = parts.slice(1).map(item => item.trim());
+  
+  return `
+    <p>${title}</p>
+    <ul>
+      ${bullets.map(bullet => `<li>${bullet}</li>`).join('')}
+    </ul>
+  `;
+}
+
 // Create product card HTML
 function createProductCard(product) {
   const defaultVariant = product.variants[0];
@@ -156,17 +185,17 @@ function createProductCard(product) {
   return `
     <div class="column is-full-mobile is-half-tablet is-one-third-fullhd">
       <div class="product-card">
-        <figure class="product-image box">
+        <figure class="product-image">
           <img src="${imageSrc}" alt="${product.title}">
         </figure>
         <div class="product-info">
           <h4 class="title is-5 has-text-centered mb-2">${product.title}</h4>
-          ${product.description ? `<p class="product-description has-text-centered mb-3">${truncateText(product.description, 80)}</p>` : ''}
-          <div class="is-flex is-flex-direction-column is-align-items-center">
+          ${product.description ? `<div class="product-description mb-3">${formatDescription(product.description)}</div>` : ''}
+          <div class="is-flex is-flex-direction-column is-align-items-center ${product.description ? '' : 'mt-4'}">
             <span class="subtitle has-text-white mb-4">${priceFormatted}</span>
             
-            ${hasVariants ? `
-              <div class="variant-selectors mb-4">
+            <div class="variant-selectors mb-4">
+              ${hasVariants ? `
                 <div class="field">
                   <label class="label has-text-white">Size:</label>
                   <div class="control">
@@ -183,20 +212,20 @@ function createProductCard(product) {
                     </div>
                   </div>
                 </div>
-                <div class="field">
-                  <label class="label has-text-white">Qty:</label>
-                  <div class="control">
-                    <div class="select">
-                      <select class="quantity-select" data-product-id="${product.id}">
-                        ${Array.from({length: defaultVariant.quantityAvailable || 10}, (_, i) => i + 1).map(num => `
-                          <option value="${num}">${num}</option>
-                        `).join('')}
-                      </select>
-                    </div>
+              ` : ''}
+              <div class="field">
+                <label class="label has-text-white">Qty:</label>
+                <div class="control">
+                  <div class="select">
+                    <select class="quantity-select" data-product-id="${product.id}">
+                      ${Array.from({length: defaultVariant.quantityAvailable || 10}, (_, i) => i + 1).map(num => `
+                        <option value="${num}">${num}</option>
+                      `).join('')}
+                    </select>
                   </div>
                 </div>
               </div>
-            ` : ''}
+            </div>
             
             ${product.available 
               ? `<button class="button is-primary has-text-white add-to-cart-btn" 
