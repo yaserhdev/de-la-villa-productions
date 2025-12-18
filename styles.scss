@@ -196,10 +196,6 @@ img {
     }
   }
 
-  .has-text-indent {
-  text-indent: 2em;
-}
-
   // Mobile: text comes first, images second (already default with Bulma)
   // Desktop: images on left (25%), text on right (75%)
   @media screen and (max-width: 599px) {
@@ -227,6 +223,11 @@ img {
     }
   }
 }
+
+ .has-text-indent {
+  text-indent: 2em;
+}
+
 
 .tabs {
   li.is-active a {

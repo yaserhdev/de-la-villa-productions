@@ -21723,9 +21723,6 @@ img {
   font-weight: 600;
   color: white;
 }
-.about-section .has-text-indent {
-  text-indent: 2em;
-}
 @media screen and (max-width: 599px) {
   .about-section .about-text-column {
     order: 1;
@@ -21745,6 +21742,10 @@ img {
   .about-section .about-images-column {
     order: 1;
   }
+}
+
+.has-text-indent {
+  text-indent: 2em;
 }
 
 .tabs li.is-active a {
