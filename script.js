@@ -64,6 +64,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const videoBackground = document.querySelector('.video-background');
+
+  if (video && videoBackground) {
+    // Show everything once video can play
+    video.addEventListener('canplay', () => {
+      videoBackground.classList.add('is-loaded');
+    });
+    
+    // Fallback: show after 1 second even if video hasn't loaded
+    setTimeout(() => {
+      videoBackground.classList.add('is-loaded');
+    }, 1000);
+  }
+
   const contactForm = document.querySelector('form[action*="formspree"]');
   const successModal = document.getElementById('success-modal');
   const closeModalBtn = document.getElementById('close-success-modal');

@@ -21633,6 +21633,11 @@ img {
 
 .video-background {
   overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.video-background.is-loaded {
+  opacity: 1;
 }
 
 .video-background video {
