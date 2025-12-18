@@ -13,7 +13,7 @@ const SHOPIFY_CONFIG = {
   
   // Shop closing date (ISO 8601 format: YYYY-MM-DDTHH:MM:SS)
   // Example: December 31, 2025 at 11:59 PM
-  shopClosingDate: '2025-12-17T23:59:59'
+  shopClosingDate: '2025-12-23T00:00:00'
 };
 
 // Validation
