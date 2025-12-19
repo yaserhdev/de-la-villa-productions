@@ -1,5 +1,3 @@
-// shop.js - Shop page functionality
-
 let shopifyAPI, cartManager, countdownInterval, openingCountdownInterval;
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -16,13 +14,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
   
-  // Shop is open - proceed normally
   startCountdown();
   
   shopifyAPI = new ShopifyAPI(SHOPIFY_CONFIG);
   cartManager = new CartManager();
   
-  // Validate cart items against current stock
   await validateCart();
   
   updateCartUI();
@@ -33,7 +29,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   resetCheckoutButton();
 });
 
-// Validate cart items against live Shopify data
 async function validateCart() {
   const items = cartManager.getItems();
   if (items.length === 0) return;
