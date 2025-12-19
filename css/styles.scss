@@ -1,9 +1,17 @@
-// Override Bulma's breakpoint variables
+// ============================================
+// BULMA CONFIGURATION & CUSTOM VARIABLES
+// ============================================
 $small: 600px;
 $medium: 725px;
 $large: 875px;
 $xl: 1050px;
 $family-primary: 'Helvetica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+// Theme Colors
+$theme-accent: #BFBFBF;
+$theme-bg-dark: #14161a;
+$theme-border: #353a46;
+$theme-border-hover: #5a5f6d;
 
 @use "bulma/sass" with (
   $tablet: $small,
@@ -14,7 +22,7 @@ $family-primary: 'Helvetica', -apple-system, BlinkMacSystemFont, 'Segoe UI', san
   $scheme-main: #000000,
   $body-background-color: #000000,
   $footer-background-color: #000000,
-  $link: #BFBFBF,
+  $link: $theme-accent,
   $family-primary: $family-primary
 );
 
@@ -49,172 +57,239 @@ $family-primary: 'Helvetica', -apple-system, BlinkMacSystemFont, 'Segoe UI', san
   font-style: italic;
 }
 
-// Your existing custom styles (paste them here exactly as they were)
+// ============================================
+// BASE & GLOBAL STYLES
+// ============================================
 body {
-    min-height: 100vh;
+  min-height: 100vh;
 }
 
 img {
-    border-radius: 7px;
+  border-radius: 7px;
 }
 
-// Target only navbar menu items, not the logo
-.navbar-menu .navbar-item {
+.has-text-indent {
+  text-indent: 2em;
+}
+
+// ============================================
+// FORM ELEMENTS (Global)
+// ============================================
+.input,
+.select select {
+  background-color: $theme-bg-dark;
+  border-color: $theme-border;
+  color: white;
+
+  &:hover {
+    border-color: $theme-border-hover;
+  }
+
+  &:focus,
+  &:active {
+    border-color: $theme-accent;
+    box-shadow: 0 0 0 0.125em rgba(191, 191, 191, 0.25);
+  }
+}
+
+.select {
+  &:not(.is-multiple):not(.is-loading)::after {
+    border-color: $theme-accent !important;
+  }
+  
+  select option {
+    background-color: $theme-bg-dark;
     color: white;
-    position: relative;
+  }
+}
+
+// ============================================
+// NAVIGATION
+// ============================================
+// Menu items with underline hover effect
+.navbar-menu .navbar-item {
+  color: white;
+  position: relative;
+  transition: all 0.3s ease;
+  background-color: transparent !important;
+  
+  &:hover,
+  &:focus {
+    background-color: transparent !important;
+    color: $theme-accent;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    left: 55%;
+    width: 0;
+    height: 2px;
+    background-color: $theme-accent;
     transition: all 0.3s ease;
-    background-color: transparent !important; // Remove native background
-    
-    &:hover,
-    &:focus {
-        background-color: transparent !important; // Remove native background on hover
-        color: #BFBFBF;
-    }
-    
-    &::after {
-        content: '';
-        position: absolute;
-        bottom: 10px; // Lower value = underline further down
-        left: 50%;
-        width: 0;
-        height: 2px;
-        background-color: #BFBFBF;
-        transition: all 0.3s ease;
-        transform: translateX(-50%);
-    }
-    
-    &:hover::after {
-        width: 80%;
-    }
+    transform: translateX(-50%);
+  }
+  
+  &:hover::after {
+    width: 80%;
+  }
 }
 
-// Remove background from logo hover
+// Logo - no background on hover
 .navbar-brand .navbar-item {
+  background-color: transparent !important;
+  
+  &:hover,
+  &:focus {
     background-color: transparent !important;
-    
-    &:hover,
-    &:focus {
-        background-color: transparent !important;
-    }
+  }
 }
 
+// Mobile menu burger
 .navbar-burger {
-    background-color: transparent !important;
-    
-    &:hover {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-    }
+  background-color: transparent !important;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
 }
 
+// ============================================
+// VIDEO BACKGROUND & CONTROLS
+// ============================================
 .video-background {
-    overflow: hidden;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    
-    &.is-loaded {
-      opacity: 1;
-    }
-}
-
-.video-background video {
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  
+  &.is-loaded {
+    opacity: 1;
+  }
+  
+  video {
     object-fit: cover;
+  }
 }
 
 .video-text {
-    position: absolute; 
-    z-index: 1; 
-    height: 100%;
-    width: 100%;
-    background-color: rgb(0, 0, 0, 0.25);
+  position: absolute; 
+  z-index: 1; 
+  height: 100%;
+  width: 100%;
+  background-color: rgb(0, 0, 0, 0.25);
 }
 
+// Mute/Unmute button
 .unmute-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: white;
-    transition: all 0.3s ease;
-    z-index: 10;
-    border: none; /* Remove default button border */
-    outline: none; /* Remove default button outline */
-}
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  border: none;
+  outline: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: all 0.3s ease;
+  z-index: 10;
 
-.unmute-btn:hover {
+  &:hover {
     background: rgba(0, 0, 0, 0.8);
     transform: scale(1.1);
-}
+  }
 
-/* Prevent SVG from blocking clicks */
-.unmute-btn svg {
+  svg {
     pointer-events: none;
+  }
+
+  // Muted state - show muted icon
+  &.muted {
+    .icon-muted { display: block; }
+    .icon-unmuted { display: none; }
+  }
+
+  // Unmuted state - show unmuted icon
+  &:not(.muted) {
+    .icon-muted { display: none; }
+    .icon-unmuted { display: block; }
+  }
 }
 
-/* Show muted icon by default */
-.unmute-btn.muted .icon-muted {
-    display: block;
+// ============================================
+// BUTTONS (Shared Styles)
+// ============================================
+// Dark themed button base
+%dark-button {
+  border: 1px solid $theme-border;
+  background-color: $theme-bg-dark;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: #1f2228;
+    border-color: $theme-border-hover;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
 }
 
-.unmute-btn.muted .icon-unmuted {
-    display: none;
-}
-
-/* Show unmuted icon when not muted */
-.unmute-btn:not(.muted) .icon-muted {
-    display: none;
-}
-
-.unmute-btn:not(.muted) .icon-unmuted {
-    display: block;
-}
-
+// Shop Now button (hero)
 #shopNowBtn {
   background-color: transparent;
-  border: 2px solid #BFBFBF;
-  color: #BFBFBF;
+  border: 2px solid $theme-accent;
+  color: $theme-accent;
   transition: all 0.4s ease;
   
   &:hover {
-    background-color: #BFBFBF;
-    border-color: #BFBFBF;
+    background-color: $theme-accent;
+    border-color: $theme-accent;
     color: black;
     transform: scale(1.1);
     box-shadow: 0 8px 16px rgba(191, 191, 191, 0.3);
   }
 }
 
-// Store link styling
+// Add to cart & Checkout buttons
+.add-to-cart-btn,
+#checkoutBtn {
+  @extend %dark-button;
+}
+
+// Contact & Shop buttons
+.contact button,
+.shop a {
+  @extend %dark-button;
+}
+
+// ============================================
+// STORE LINK (Mobile)
+// ============================================
 .store-link {
-  display: none; // Hidden by default
-  
-  @media (max-width: 724px) {
-    display: inline-flex; // Show on mobile/tablet
-  }
-  
+  display: none;
   align-items: center;
   gap: 0.5rem;
   margin-top: 5rem;
-  color: #BFBFBF;
+  color: $theme-accent;
   text-decoration: none;
   font-size: 1.1rem;
   font-weight: 500;
   position: relative;
   transition: all 0.3s ease;
   
+  @media (max-width: 724px) {
+    display: inline-flex;
+  }
+  
   svg {
     transition: transform 0.3s ease;
   }
   
-  // Animated underline
   &::after {
     content: '';
     position: absolute;
@@ -222,7 +297,7 @@ img {
     left: 0;
     width: 0;
     height: 2px;
-    background-color: #BFBFBF;
+    background-color: $theme-accent;
     transition: width 0.3s ease;
   }
   
@@ -241,21 +316,23 @@ img {
   }
 }
 
-// About Page Styles
+// ============================================
+// ABOUT PAGE
+// ============================================
 .about-section {
   .about-text {
-    font-size: 0.9rem; // Size 7 (< 725px)
+    font-size: 0.9rem;
     
-    @media (min-width: 725px) and (max-width: 874px) {
-        font-size: 1rem; // Size 6 (725-874px) - ONE SIZE SMALLER
+    @media (min-width: $medium) and (max-width: $large - 1px) {
+      font-size: 1rem;
     }
     
-    @media (min-width: 875px) and (max-width: 1049px) {
-        font-size: 1.15rem; // Size 5 (875-1049px)
+    @media (min-width: $large) and (max-width: $xl - 1px) {
+      font-size: 1.15rem;
     }
     
-    @media (min-width: 1050px) {
-        font-size: 1.3rem; // Size 4 (1050px+)
+    @media (min-width: $xl) {
+      font-size: 1.3rem;
     }
   }
 
@@ -285,15 +362,14 @@ img {
     }
   }
 
-  // Mobile: text comes first, images second (already default with Bulma)
-  // Desktop: images on left (25%), text on right (75%)
-  @media screen and (max-width: 599px) {
+  // Mobile: text first, images second
+  @media screen and (max-width: $small - 1px) {
     .about-text-column {
-      order: 1; // Text first on mobile
+      order: 1;
     }
 
     .about-images-column {
-      order: 2; // Images second on mobile
+      order: 2;
       
       .founder-card {
         max-width: 300px;
@@ -302,26 +378,25 @@ img {
     }
   }
 
-  @media screen and (min-width: 600px) {
+  // Desktop: images left, text right
+  @media screen and (min-width: $small) {
     .about-text-column {
-      order: 2; // Text on right on desktop
+      order: 2;
     }
 
     .about-images-column {
-      order: 1; // Images on left on desktop
+      order: 1;
     }
   }
 }
 
- .has-text-indent {
-  text-indent: 2em;
-}
-
-
+// ============================================
+// TABS
+// ============================================
 .tabs {
   li.is-active a {
-    border-bottom-color: #BFBFBF;
-    color: #BFBFBF;
+    border-bottom-color: $theme-accent;
+    color: $theme-accent;
   }
   
   a {
@@ -329,92 +404,42 @@ img {
     transition: all 0.3s ease;
     
     &:hover {
-      color: #BFBFBF;
-      border-bottom-color: #BFBFBF;
+      color: $theme-accent;
+      border-bottom-color: $theme-accent;
     }
   }
 }
 
-.projects .columns.is-multiline,
-.shop .columns.is-multiline {
+// ============================================
+// PROJECTS & GALLERY
+// ============================================
+.projects,
+.shop {
+  .columns.is-multiline {
     justify-content: center;
-}
-
-.projects .column,
-.shop .column {
+  }
+  
+  .column {
     display: flex;
     flex-direction: column;
+  }
 }
 
 .projects .title {
-    min-height: 3.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-// Gallery iframe styling
-.iframe-container {
-  position: relative;
-  padding-bottom: 56.25%; // 16:9 aspect ratio
-  height: 0;
-  overflow: hidden;
-  border-radius: 8px; // Added border radius
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
-  iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none; // Remove any default border
-    border-radius: 8px; // Match container radius
-  }
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
-
-    &::after {
-      opacity: 1;
-    }
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(191, 191, 191, 0.1), transparent);
-    opacity: 0;
-    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-    border-radius: 8px;
-  }
+  min-height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.video-reflection {
-  height: 30px;
-  background: linear-gradient(
-    to bottom,
-    rgba(191, 191, 191, 0.15),
-    transparent
-  );
-  margin-top: -8px;
-  border-radius: 0 0 8px 8px;
-}
-
-// Gallery iframe with reflection
+// Gallery iframe with reflection effect
 .iframe-container {
   position: relative;
   padding-bottom: 56.25%; // 16:9 aspect ratio
   height: 0;
   overflow: hidden;
   border-radius: 8px;
-  margin-bottom: 2.5rem; // Space for reflection
+  margin-bottom: 2.5rem;
 
   iframe {
     position: absolute;
@@ -430,7 +455,7 @@ img {
   &::after {
     content: '';
     position: absolute;
-    top: 100%; // Start right after the video
+    top: 100%;
     left: 0;
     right: 0;
     height: 30px;
@@ -445,9 +470,11 @@ img {
   }
 }
 
-// Shop & Cart Styles
+// ============================================
+// SHOP
+// ============================================
 .shop h2 {
-    margin-bottom: 0px !important;
+  margin-bottom: 0px !important;
 }
 
 // Shop header with countdown timer
@@ -456,12 +483,12 @@ img {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem; // Reduced gap between Shop and timer
+  gap: 0.5rem;
   flex-wrap: wrap;
-  padding-bottom: 5rem; // Added padding below timer
+  padding-bottom: 5rem;
 
   .shop-timer {
-    color: #BFBFBF;
+    color: $theme-accent;
     font-size: 1.25rem;
     font-weight: 400;
     font-family: inherit;
@@ -478,18 +505,18 @@ img {
   width: 100%;
 
   .container {
-    width: 100%; // Ensure container is full width
+    width: 100%;
   }
 
   .shop-closed-content {
     max-width: 500px;
     padding: 3rem 1.5rem;
     text-align: center;
-    margin: 0 auto; // Center the content block itself
+    margin: 0 auto;
   }
 
   .shop-closed-icon {
-    color: #BFBFBF;
+    color: $theme-accent;
     opacity: 0.6;
     margin: 0 auto;
     display: block;
@@ -500,24 +527,25 @@ img {
   }
 }
 
-// Product cards
+// ============================================
+// PRODUCT CARDS
+// ============================================
 .product-card {
   display: flex;
   flex-direction: column;
   height: 100%;
 
-  .product-info {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; // This centers everything vertically
-  }
-
   .product-image {
     border-radius: 8px;
     overflow: hidden;
     margin-bottom: 1rem;
-    border: none; // Remove any border
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+
+    &:hover {
+      opacity: 0.85;
+    }
 
     img {
       width: 100%;
@@ -530,56 +558,45 @@ img {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    // justify-content: space-between;
-  }
-
-// Product description styling - FORCE list styling
-.product-description {
-  color: #bfbfbf !important;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  text-align: center !important;
-  padding: 0 1rem;
-  
-  p {
-    text-align: center !important;
-    margin-top: 20px;
-  }
-  
-  .description-bullets {
-    display: flex;
     justify-content: center;
   }
-  
-  ul {
-    display: block !important;
-    list-style-type: disc !important;
-    margin: 0.5rem 0 0.75rem 0 !important;
-    padding-left: 1.5rem !important;
-    text-align: left !important;
+
+  .product-description {
+    color: $theme-accent !important;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    text-align: center !important;
+    padding: 0 1rem;
+    
+    p {
+      text-align: center !important;
+      margin-top: 20px;
+    }
+    
+    .description-bullets {
+      display: flex;
+      justify-content: center;
+    }
+    
+    ul {
+      display: block !important;
+      list-style-type: disc !important;
+      margin: 0.5rem 0 0.75rem 0 !important;
+      padding-left: 1.5rem !important;
+      text-align: left !important;
+    }
+    
+    li {
+      display: list-item !important;
+      list-style-type: disc !important;
+      list-style-position: outside !important;
+      margin-bottom: 0.35rem !important;
+      text-align: left !important;
+    }
   }
-  
-  li {
-    display: list-item !important;
-    list-style-type: disc !important;
-    list-style-position: outside !important;
-    margin-bottom: 0.35rem !important;
-    text-align: left !important;
-  }
-}
 
   .add-to-cart-btn {
     min-width: 150px;
-    border: 1px solid #353a46;
-    background-color: #14161a;
-    transition: all 0.3s ease;
-    
-    &:hover {
-      background-color: #1f2228;
-      border-color: #5a5f6d;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    }
   }
 
   .variant-selectors {
@@ -600,67 +617,31 @@ img {
       }
 
       .select select {
-        background-color: #14161a;
-        border-color: #353a46;
-        color: white;
         text-align: center;
         padding-right: 2.5em;
 
-        &:hover {
-          border-color: #5a5f6d;
-        }
-
-        &:focus {
-          border-color: #BFBFBF;
-          box-shadow: 0 0 0 0.125em rgba(191, 191, 191, 0.25);
-        }
-
-        option {
-          background-color: #14161a;
-          color: white;
-
-          &:disabled {
-            color: #666;
-          }
+        option:disabled {
+          color: #666;
         }
       }
     }
   }
 }
 
-.input,
-.select select {
-  background-color: #14161a;
-  border-color: #353a46;
-  color: white;
-
-  &:hover {
-    border-color: #5a5f6d;
-  }
-
-  &:focus,
-  &:active {
-    border-color: #BFBFBF;
-    box-shadow: 0 0 0 0.125em rgba(191, 191, 191, 0.25);
-  }
+// ============================================
+// CART - FIXED BUTTON
+// ============================================
+.fixed-cart-button-link {
+  text-decoration: none;
+  display: block;
 }
 
-.select:not(.is-multiple):not(.is-loading)::after {
-  border-color: #BFBFBF !important;
-}
-
-.select select option {
-  background-color: #14161a;
-  color: white;
-}
-
-// Fixed cart button (bottom right)
 .fixed-cart-button {
   position: fixed;
-  bottom: 3.5rem;  // Increased from 2rem for more padding from footer
+  bottom: 3.5rem;
   right: 2rem;
-  background-color: #14161a;
-  border: 2px solid #353a46;
+  background-color: $theme-bg-dark;
+  border: 2px solid $theme-border;
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -674,7 +655,7 @@ img {
 
   &:hover {
     background-color: #1f2228;
-    border-color: #BFBFBF;
+    border-color: $theme-accent;
     transform: scale(1.1) translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8);
   }
@@ -688,7 +669,7 @@ img {
     position: absolute;
     top: -5px;
     right: -5px;
-    background-color: #BFBFBF;
+    background-color: $theme-accent;
     color: #000000;
     border-radius: 50%;
     width: 24px;
@@ -702,12 +683,9 @@ img {
   }
 }
 
-.fixed-cart-button-link {
-  text-decoration: none;
-  display: block;
-}
-
-// Cart Modal
+// ============================================
+// CART - MODAL
+// ============================================
 .cart-modal {
   display: none;
   position: fixed;
@@ -726,8 +704,8 @@ img {
   }
 
   .cart-modal-content {
-    background-color: #14161a;
-    border: 1px solid #353a46;
+    background-color: $theme-bg-dark;
+    border: 1px solid $theme-border;
     border-radius: 8px;
     max-width: 600px;
     width: 90%;
@@ -742,7 +720,7 @@ img {
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem;
-    border-bottom: 1px solid #353a46;
+    border-bottom: 1px solid $theme-border;
 
     .title {
       margin: 0;
@@ -758,7 +736,7 @@ img {
       transition: all 0.3s ease;
 
       &:hover {
-        color: #BFBFBF;
+        color: $theme-accent;
         transform: rotate(90deg);
       }
 
@@ -774,6 +752,27 @@ img {
     padding: 1.5rem;
   }
 
+  .cart-footer {
+    padding: 1.5rem;
+    border-top: 1px solid $theme-border;
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+
+      .subtitle {
+        color: white;
+        font-size: 1.25rem;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+// ============================================
+// CART - ITEMS
+// ============================================
 .cart-item {
   display: flex;
   align-items: center;
@@ -783,11 +782,72 @@ img {
   border-radius: 8px;
   margin-bottom: 1rem;
 
+  .cart-item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .cart-item-details {
+    flex-grow: 1;
+
+    .title {
+      margin-bottom: 0.25rem;
+      color: white;
+    }
+
+    .subtitle {
+      color: $theme-accent;
+    }
+  }
+
+  .cart-item-quantity {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+
+    .quantity-btn {
+      background-color: $theme-border;
+      border: none;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: $theme-border-hover;
+      }
+    }
+
+    span {
+      min-width: 30px;
+      text-align: center;
+      color: white;
+    }
+  }
+
+  .cart-item-remove {
+    background: none;
+    border: none;
+    color: $theme-accent;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: #E91E63;
+    }
+  }
+
+  // Mobile cart item layout
   @media (max-width: 768px) {
     flex-direction: column;
-    align-items: center; // Changed from flex-start
-    gap: 0.75rem;
-    position: relative; // Added for absolute positioning context
+    align-items: center;
+    position: relative;
     
     .cart-item-image {
       width: 100% !important;
@@ -806,10 +866,6 @@ img {
     }
     
     .cart-item-quantity {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
       width: 100%;
     }
     
@@ -820,104 +876,11 @@ img {
       padding: 0.25rem;
     }
   }
-  
-  @media (min-width: 769px) {
-    .cart-item-image {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 4px;
-    }
-
-    .cart-item-details {
-      flex-grow: 1;
-
-      .title {
-        margin-bottom: 0.25rem;
-        color: white;
-      }
-
-      .subtitle {
-        color: #BFBFBF;
-      }
-    }
-
-    .cart-item-quantity {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-
-      .quantity-btn {
-        background-color: #353a46;
-        border: none;
-        color: white;
-        width: 30px;
-        height: 30px;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-
-        &:hover {
-          background-color: #5a5f6d;
-        }
-      }
-
-      span {
-        min-width: 30px;
-        text-align: center;
-        color: white;
-      }
-    }
-
-    .cart-item-remove {
-      background: none;
-      border: none;
-      color: #BFBFBF;
-      cursor: pointer;
-      padding: 0.5rem;
-      transition: all 0.3s ease;
-
-      &:hover {
-        color: #E91E63;
-      }
-    }
-  }
 }
 
-  .cart-footer {
-    padding: 1.5rem;
-    border-top: 1px solid #353a46;
-
-    .cart-total {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-
-      .subtitle {
-        color: white;
-        font-size: 1.25rem;
-        font-weight: bold;
-      }
-    }
-  }
-}
-
-.add-to-cart-btn,
-#checkoutBtn {
-  border: 1px solid #353a46;
-  background-color: #14161a;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background-color: #1f2228;
-    border-color: #5a5f6d;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  }
-}
-
-// Image Lightbox
+// ============================================
+// IMAGE LIGHTBOX
+// ============================================
 .image-lightbox {
   display: none;
   position: fixed;
@@ -968,67 +931,50 @@ img {
   }
 }
 
-// Make product images clickable
-.product-image {
-  cursor: pointer;
-  transition: opacity 0.3s ease;
-  
-  &:hover {
-    opacity: 0.85;
-  }
-}
-
-// Social icons styling
+// ============================================
+// SOCIAL ICONS
+// ============================================
 .social-icons {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   
-  @media (max-width: 600px) {
-    align-items: center; // Center on mobile
+  @media (max-width: $small) {
+    align-items: center;
+    flex-direction: row;
   }
   
-  @media (min-width: 601px) {
-    align-items: flex-start; // Left align on desktop
+  @media (min-width: $small + 1px) {
+    align-items: flex-start;
   }
   
   a {
-    color: #BFBFBF !important;
+    color: $theme-accent !important;
     transition: color 0.3s ease;
-    display: flex; // Make all links flex containers
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px; // Fixed width for alignment
-    height: 48px; // Fixed height for alignment
+    width: 48px;
+    height: 48px;
     
     &:hover {
       color: white !important;
     }
     
     // Platform-specific hover colors
-    &[title="Instagram"]:hover {
-      color: #E4405F !important;
-    }
-    
-    &[title="YouTube"]:hover {
-      color: #FF0000 !important;
-    }
-    
-    &[title="TikTok"]:hover {
-      color: #00f2ea !important;
-    }
+    &[title="Instagram"]:hover { color: #E4405F !important; }
+    &[title="YouTube"]:hover { color: #FF0000 !important; }
+    &[title="TikTok"]:hover { color: #00f2ea !important; }
   }
   
-  // SVG icon sizing
   svg {
     width: 32px;
     height: 32px;
     color: inherit;
   }
   
-  // Font Awesome icon sizing (should match SVG)
   i {
-    font-size: 2rem !important; // Adjust to match SVG size
+    font-size: 2rem !important;
   }
 }
 
@@ -1040,7 +986,7 @@ img {
   height: 48px;
   
   svg {
-    color: #BFBFBF;
+    color: $theme-accent;
     transition: color 0.3s ease;
   }
   
@@ -1049,21 +995,45 @@ img {
   }
 }
 
-.contact button,
-.shop a {
-    border: 1px solid #353a46;
-    background-color: #14161a;
-    transition: all 0.3s ease;
-    
-    &:hover {
-        background-color: #1f2228;
-        border-color: #5a5f6d;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    }
+// ============================================
+// FOOTER
+// ============================================
+.footer {
+  margin-top: auto;
+  padding: 0.5rem 1.5rem;
+  min-height: 3.25rem;
 }
 
-// Success Modal
+.creadev-link {
+  color: $theme-accent;
+  text-decoration: none;
+  position: relative;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #E91E63, #9C27B0);
+    transition: width 0.3s ease;
+  }
+  
+  &:hover {
+    color: white;
+    
+    &::after {
+      width: 100%;
+    }
+  }
+}
+
+// ============================================
+// SUCCESS MODAL
+// ============================================
 #success-modal {
   .modal-background {
     background-color: rgba(0, 0, 0, 0.75);
@@ -1072,13 +1042,13 @@ img {
   .modal-content {
     max-width: 500px !important;
     margin: 0 auto !important;
-    padding: 0 1.5rem !important; // This adds the side padding
-    width: calc(100% - 3rem) !important; // Ensures padding on both sides
+    padding: 0 1.5rem !important;
+    width: calc(100% - 3rem) !important;
   }
 
   .box {
     background-color: #f4ede2;
-    border: 2px solid #353a46;
+    border: 2px solid $theme-border;
     padding: 2rem;
     width: 100%;
     
@@ -1087,18 +1057,17 @@ img {
     }
 
     .button {
-      background-color: #14161a;
-      border: 1px solid #353a46;
+      background-color: $theme-bg-dark;
+      border: 1px solid $theme-border;
       color: white;
 
       &:hover {
         background-color: #1f2228;
-        border-color: #5a5f6d;
+        border-color: $theme-border-hover;
       }
     }
   }
 
-  // Mobile specific
   @media screen and (max-width: 768px) {
     .box {
       padding: 1.5rem;
@@ -1106,62 +1075,40 @@ img {
   }
 }
 
-.footer {
-  margin-top: auto;
-  padding: 0.5rem 1.5rem;
-  min-height: 3.25rem;
-}
-
-.creadev-link {
-    color: #BFBFBF;
-    text-decoration: none;
-    position: relative;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    
-    &::after {
-        content: '';
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: linear-gradient(90deg, #E91E63, #9C27B0); // Pink to purple
-        transition: width 0.3s ease;
-    }
-    
-    &:hover {
-        color: white;
-        
-        &::after {
-            width: 100%;
-        }
-    }
-}
-
-@media (max-width: 599px) {
+// ============================================
+// RESPONSIVE - MOBILE (< 600px)
+// ============================================
+@media (max-width: $small - 1px) {
   .is-narrow {
     padding-top: 22px;
   }
-  .social-icons {
-    flex-direction: row;
-  }
+  
   div:has(> #shopNowBtn) {
     padding-top: 40%;
   }
+  
   .mixtape-tour p {
     padding-top: 25%;
   }
+
+  .project ul {
+    font-size: 12px;
+  }
 }
 
-@media (min-width: 600px) {
+// ============================================
+// RESPONSIVE - TABLET & UP (≥ 600px)
+// ============================================
+@media (min-width: $small) {
   .is-narrow {
     padding-top: 44px;
     padding-right: 44px;
   }
+  
   div:has(> #shopNowBtn) {
     padding-top: 35%;
   }
+  
   .mixtape-tour p {
     padding-top: 15%;
   }
