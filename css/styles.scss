@@ -31,28 +31,28 @@ $theme-border-hover: #5a5f6d;
 // ============================================
 @font-face {
   font-family: 'Helvetica';
-  src: url('./fonts/Helvetica.ttf') format('truetype');
+  src: url('../fonts/Helvetica.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Helvetica';
-  src: url('./fonts/Helvetica-Bold.ttf') format('truetype');
+  src: url('../fonts/Helvetica-Bold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Helvetica';
-  src: url('./fonts/Helvetica-Oblique.ttf') format('truetype');
+  src: url('../fonts/Helvetica-Oblique.ttf') format('truetype');
   font-weight: normal;
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Helvetica';
-  src: url('./fonts/Helvetica-BoldOblique.ttf') format('truetype');
+  src: url('../fonts/Helvetica-BoldOblique.ttf') format('truetype');
   font-weight: bold;
   font-style: italic;
 }
@@ -123,7 +123,7 @@ img {
     content: '';
     position: absolute;
     bottom: 10px;
-    left: 55%;
+    left: 50%;
     width: 0;
     height: 2px;
     background-color: $theme-accent;
@@ -534,6 +534,7 @@ img {
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
 
   .product-image {
     border-radius: 8px;
@@ -542,6 +543,7 @@ img {
     border: none;
     cursor: pointer;
     transition: opacity 0.3s ease;
+    position: relative;
 
     &:hover {
       opacity: 0.85;
@@ -595,6 +597,22 @@ img {
     }
   }
 
+  // Stock warning space - always reserves space for alignment
+  .stock-warning-container {
+    min-height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  .stock-warning {
+    color: #ff6b6b;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-align: center;
+  }
+
   .add-to-cart-btn {
     min-width: 150px;
   }
@@ -624,6 +642,60 @@ img {
           color: #666;
         }
       }
+    }
+  }
+
+  // Out of stock overlay - Option 3: Diagonal Stripes + Bold Badge
+  &.is-out-of-stock {
+    .product-image {
+      filter: grayscale(40%) brightness(0.55);
+      
+      // Diagonal stripe pattern overlay
+      &::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: repeating-linear-gradient(
+          45deg,
+          rgba(0, 0, 0, 0.6) 0px,
+          rgba(0, 0, 0, 0.6) 10px,
+          rgba(0, 0, 0, 0.3) 10px,
+          rgba(0, 0, 0, 0.3) 20px
+        );
+        z-index: 1;
+        pointer-events: none;
+      }
+      
+      // Centered "SOLD OUT" badge
+      &::after {
+        content: 'SOLD OUT';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-15deg);
+        background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+        color: white;
+        padding: 12px 50px;
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        text-align: center;
+        border: 3px solid #333;
+        border-radius: 4px;
+        box-shadow: 
+          0 8px 24px rgba(0, 0, 0, 0.8),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        z-index: 2;
+        pointer-events: none;
+      }
+    }
+    
+    .product-info {
+      opacity: 0.55;
     }
   }
 }
@@ -1089,10 +1161,6 @@ img {
   
   .mixtape-tour p {
     padding-top: 25%;
-  }
-
-  .project ul {
-    font-size: 12px;
   }
 }
 

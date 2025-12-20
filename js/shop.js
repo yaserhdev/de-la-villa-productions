@@ -206,6 +206,7 @@ async function loadProducts() {
         const card = e.target.closest('.product-card');
         const addToCartBtn = card.querySelector('.add-to-cart-btn');
         const quantitySelect = card.querySelector('.quantity-select');
+        const stockWarningContainer = card.querySelector('.stock-warning-container');
         
         addToCartBtn.dataset.variantId = variantId;
         
@@ -215,6 +216,9 @@ async function loadProducts() {
         
         quantitySelect.value = '1';
         addToCartBtn.dataset.quantity = '1';
+        
+        // Update stock warning
+        updateStockWarning(stockWarningContainer, stock);
       });
     });
 
@@ -238,6 +242,15 @@ async function loadProducts() {
     console.error('Error loading products:', error);
     loadingState.classList.add('is-hidden');
     errorState.classList.remove('is-hidden');
+  }
+}
+
+// Update stock warning display
+function updateStockWarning(container, stock) {
+  if (stock <= 3 && stock > 0) {
+    container.innerHTML = `<span class="stock-warning">Only ${stock} left in stock!</span>`;
+  } else {
+    container.innerHTML = '';
   }
 }
 
@@ -352,10 +365,19 @@ function createProductCard(product) {
   const priceFormatted = shopifyAPI.formatPrice(product.price, product.currencyCode);
   
   const hasVariants = product.variants.length > 1 && product.variants[0].title !== 'Default Title';
+  
+  // Add out-of-stock class if product is unavailable
+  const outOfStockClass = !product.available ? 'is-out-of-stock' : '';
+  
+  // Determine initial stock warning
+  const defaultStock = defaultVariant.quantityAvailable || 0;
+  const stockWarning = (defaultStock <= 3 && defaultStock > 0) 
+    ? `<span class="stock-warning">Only ${defaultStock} left in stock!</span>` 
+    : '';
 
   return `
     <div class="column is-full-mobile is-half-tablet is-one-third-fullhd">
-      <div class="product-card">
+      <div class="product-card ${outOfStockClass}">
         <figure class="product-image">
           <img src="${imageSrc}" alt="${product.title}">
         </figure>
@@ -397,6 +419,8 @@ function createProductCard(product) {
                 </div>
               </div>
             </div>
+            
+            <div class="stock-warning-container">${stockWarning}</div>
             
             ${product.available 
               ? `<button class="button is-primary has-text-white add-to-cart-btn" 
