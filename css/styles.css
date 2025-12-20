@@ -21562,15 +21562,17 @@ has-background-danger.is-hoverable:active {
 
 @font-face {
   font-family: "Helvetica";
-  src: url("../fonts/helvetica-webfont.woff2") format("truetype");
+  src: url("../fonts/helvetica-webfont.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: "Helvetica";
-  src: url("../fonts/helvetica-bold-webfont.woff2") format("truetype");
+  src: url("../fonts/helvetica-bold-webfont.woff2") format("woff2");
   font-weight: bold;
   font-style: normal;
+  font-display: swap;
 }
 body {
   min-height: 100vh;
