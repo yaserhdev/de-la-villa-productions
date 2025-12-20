@@ -62,7 +62,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (homeVideo.currentTime >= 18.8) {
-        shopNowBtn.classList.remove("is-hidden");
+        // Only show if shop is actually open
+        const now = new Date();
+        const opening = new Date(SHOPIFY_CONFIG.shopOpeningDate);
+        const closing = new Date(SHOPIFY_CONFIG.shopClosingDate);
+        const isShopOpen = now >= opening && now <= closing;
+        
+        if (isShopOpen) {
+          shopNowBtn.classList.remove("is-hidden");
+        }
       }
     });
   }
@@ -121,5 +129,47 @@ document.addEventListener("DOMContentLoaded", () => {
         successModal.classList.remove("is-active");
       });
     }
+  }
+
+  // Check if shop is open and hide/show shop links
+  function checkShopStatus() {
+    const now = new Date();
+    const opening = new Date(SHOPIFY_CONFIG.shopOpeningDate);
+    const closing = new Date(SHOPIFY_CONFIG.shopClosingDate);
+    
+    const isShopOpen = now >= opening && now <= closing;
+    
+    // Get shop buttons/links
+    const shopNowBtn = document.getElementById("shopNowBtn");
+    const storeLink = document.querySelector(".store-link");
+    
+    if (!isShopOpen) {
+      // Hide shop elements when shop is closed
+      if (shopNowBtn) {
+        shopNowBtn.classList.add("is-hidden");
+        shopNowBtn.style.display = "none";
+      }
+      if (storeLink) {
+        storeLink.style.display = "none";
+      }
+    } else {
+      // Show shop elements when shop is open (in case they were hidden)
+      if (shopNowBtn && homeVideo && homeVideo.currentTime >= 18.8) {
+        // Only show if video has reached the right timestamp
+        shopNowBtn.classList.remove("is-hidden");
+        shopNowBtn.style.display = "";
+      }
+      if (storeLink) {
+        storeLink.style.display = "";
+      }
+    }
+  }
+
+  // Run the check on page load
+  if (typeof SHOPIFY_CONFIG !== 'undefined') {
+    checkShopStatus();
+    
+    // Optional: Check every minute in case shop opens/closes while page is open
+    setInterval(checkShopStatus, 60000); // 60000ms = 1 minute
   }
 });
