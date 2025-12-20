@@ -21562,27 +21562,15 @@ has-background-danger.is-hoverable:active {
 
 @font-face {
   font-family: "Helvetica";
-  src: url("../fonts/Helvetica.ttf") format("truetype");
+  src: url("../fonts/helvetica-webfont.woff2") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: "Helvetica";
-  src: url("../fonts/Helvetica-Bold.ttf") format("truetype");
+  src: url("../fonts/helvetica-bold-webfont.woff2") format("truetype");
   font-weight: bold;
   font-style: normal;
-}
-@font-face {
-  font-family: "Helvetica";
-  src: url("../fonts/Helvetica-Oblique.ttf") format("truetype");
-  font-weight: normal;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Helvetica";
-  src: url("../fonts/Helvetica-BoldOblique.ttf") format("truetype");
-  font-weight: bold;
-  font-style: italic;
 }
 body {
   min-height: 100vh;
@@ -21630,20 +21618,6 @@ img {
 .navbar-menu .navbar-item:hover, .navbar-menu .navbar-item:focus {
   background-color: transparent !important;
   color: #BFBFBF;
-}
-.navbar-menu .navbar-item::after {
-  content: "";
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background-color: #BFBFBF;
-  transition: all 0.3s ease;
-  transform: translateX(-50%);
-}
-.navbar-menu .navbar-item:hover::after {
-  width: 80%;
 }
 
 .navbar-brand .navbar-item {
@@ -22029,6 +22003,19 @@ img {
 }
 .product-card .add-to-cart-btn {
   min-width: 150px;
+}
+.product-card .add-to-cart-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #14161a;
+  border-color: #353a46;
+  color: white;
+}
+.product-card .add-to-cart-btn:disabled:hover {
+  background-color: #14161a;
+  border-color: #353a46;
+  transform: none;
+  box-shadow: none;
 }
 .product-card .variant-selectors {
   display: flex;

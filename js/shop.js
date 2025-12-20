@@ -429,7 +429,7 @@ function createProductCard(product) {
                          data-quantity="1">
                    Add to Cart
                  </button>`
-              : `<button class="button is-primary has-text-white" disabled>
+              : `<button class="button is-primary has-text-white add-to-cart-btn" disabled>
                    Out of Stock
                  </button>`
             }
