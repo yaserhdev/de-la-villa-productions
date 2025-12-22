@@ -1,5 +1,6 @@
 class CartManager {
   constructor() {
+    this.version = "1.0"; // Increment this when you need to force clear carts
     this.items = this.loadCart();
     this.listeners = [];
   }
@@ -7,6 +8,16 @@ class CartManager {
   loadCart() {
     try {
       const cartData = localStorage.getItem("delavilla_cart");
+      const versionData = localStorage.getItem("delavilla_cart_version");
+      
+      // If version doesn't match or doesn't exist, clear the cart
+      if (!versionData || versionData !== this.version) {
+        console.log("Cart version mismatch - clearing cart");
+        localStorage.removeItem("delavilla_cart");
+        localStorage.setItem("delavilla_cart_version", this.version);
+        return [];
+      }
+      
       return cartData ? JSON.parse(cartData) : [];
     } catch (error) {
       console.error("Error loading cart:", error);
@@ -17,6 +28,7 @@ class CartManager {
   saveCart() {
     try {
       localStorage.setItem("delavilla_cart", JSON.stringify(this.items));
+      localStorage.setItem("delavilla_cart_version", this.version);
       this.notifyListeners();
     } catch (error) {
       console.error("Error saving cart:", error);
