@@ -2,8 +2,8 @@ const SHOPIFY_CONFIG = {
   storeDomain: "delavillaprod.myshopify.com",
   storefrontAccessToken: "fbbd3af51ce4a518fb094ea34139f2f1",
   apiVersion: "2025-01",
-  shopOpeningDate: "2025-12-18T20:00:00",
-  shopClosingDate: "2025-12-22T00:00:00"
+  shopOpeningDate: "2025-12-22T00:00:00",
+  shopClosingDate: "2025-12-24T00:00:00"
 };
 
 if (
