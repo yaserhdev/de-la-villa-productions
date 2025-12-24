@@ -2,6 +2,12 @@ const SHOPIFY_CONFIG = {
   storeDomain: "delavillaprod.myshopify.com",
   storefrontAccessToken: "fbbd3af51ce4a518fb094ea34139f2f1",
   apiVersion: "2025-01",
+  
+  // Limited Drop Mode Toggle
+  // Set to true for time-limited drops, false to keep shop always open
+  limitedDropMode: false,
+  
+  // Shop timing (only used when limitedDropMode = true)
   shopOpeningDate: "2025-12-20T00:00:00",
   shopClosingDate: "2025-12-24T00:00:00"
 };

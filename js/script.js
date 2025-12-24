@@ -62,14 +62,19 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (homeVideo.currentTime >= 18.8) {
-        // Only show if shop is actually open
-        const now = new Date();
-        const opening = new Date(SHOPIFY_CONFIG.shopOpeningDate);
-        const closing = new Date(SHOPIFY_CONFIG.shopClosingDate);
-        const isShopOpen = now >= opening && now <= closing;
-        
-        if (isShopOpen) {
+        // If not in limited drop mode, always show the button
+        if (!SHOPIFY_CONFIG.limitedDropMode) {
           shopNowBtn.classList.remove("is-hidden");
+        } else {
+          // Limited drop mode - only show if shop is actually open
+          const now = new Date();
+          const opening = new Date(SHOPIFY_CONFIG.shopOpeningDate);
+          const closing = new Date(SHOPIFY_CONFIG.shopClosingDate);
+          const isShopOpen = now >= opening && now <= closing;
+          
+          if (isShopOpen) {
+            shopNowBtn.classList.remove("is-hidden");
+          }
         }
       }
     });
@@ -133,6 +138,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Check if shop is open and hide/show shop links
   function checkShopStatus() {
+    // If not in limited drop mode, shop is always open
+    if (!SHOPIFY_CONFIG.limitedDropMode) {
+      // Always show shop elements
+      const shopNowBtn = document.getElementById("shopNowBtn");
+      const storeLink = document.querySelector(".store-link");
+      
+      if (shopNowBtn && homeVideo && homeVideo.currentTime >= 18.8) {
+        shopNowBtn.classList.remove("is-hidden");
+        shopNowBtn.style.display = "";
+      }
+      if (storeLink) {
+        storeLink.style.display = "";
+      }
+      return;
+    }
+    
+    // Limited drop mode - use timing logic
     const now = new Date();
     const opening = new Date(SHOPIFY_CONFIG.shopOpeningDate);
     const closing = new Date(SHOPIFY_CONFIG.shopClosingDate);

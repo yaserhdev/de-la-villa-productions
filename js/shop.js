@@ -1,6 +1,14 @@
 let shopifyAPI, cartManager, countdownInterval, openingCountdownInterval;
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // Check if limited drop mode is enabled
+  if (!SHOPIFY_CONFIG.limitedDropMode) {
+    // Shop is always open - skip all timing checks
+    startShop();
+    return;
+  }
+  
+  // Limited drop mode - use existing timing logic
   const shopStatus = getShopStatus();
   
   if (shopStatus === 'not-yet-open') {
@@ -15,7 +23,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   
   startCountdown();
-  
+  startShop();
+});
+
+// Initialize shop functionality
+async function startShop() {
   shopifyAPI = new ShopifyAPI(SHOPIFY_CONFIG);
   cartManager = new CartManager();
   
@@ -27,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadProducts();
   setupCartModal();
   resetCheckoutButton();
-});
+}
 
 async function validateCart() {
   const items = cartManager.getItems();
@@ -151,6 +163,11 @@ function startOpeningCountdown() {
 
 // Start countdown timer (while shop is open)
 function startCountdown() {
+  // Only show countdown in limited drop mode
+  if (!SHOPIFY_CONFIG.limitedDropMode) {
+    return;
+  }
+  
   const timerElement = document.getElementById('shopTimer');
   const closingDate = new Date(SHOPIFY_CONFIG.shopClosingDate);
 
