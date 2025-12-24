@@ -138,18 +138,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Check if shop is open and hide/show shop links
   function checkShopStatus() {
+    // Get shop buttons/links
+    const shopNowBtn = document.getElementById("shopNowBtn");
+    const storeLink = document.querySelector(".store-link");
+    
     // If not in limited drop mode, shop is always open
     if (!SHOPIFY_CONFIG.limitedDropMode) {
-      // Always show shop elements
-      const shopNowBtn = document.getElementById("shopNowBtn");
-      const storeLink = document.querySelector(".store-link");
-      
-      if (shopNowBtn && homeVideo && homeVideo.currentTime >= 18.8) {
-        shopNowBtn.classList.remove("is-hidden");
-        shopNowBtn.style.display = "";
-      }
+      // Store link is always visible initially
       if (storeLink) {
         storeLink.style.display = "";
+      }
+      
+      // For Shop Now button, respect the video timing (18.8s)
+      if (shopNowBtn && homeVideo) {
+        if (homeVideo.currentTime >= 18.8) {
+          shopNowBtn.classList.remove("is-hidden");
+          shopNowBtn.style.display = "";
+          // Hide store link when Shop Now appears
+          if (storeLink) {
+            storeLink.style.display = "none";
+          }
+        }
+      } else if (shopNowBtn && !homeVideo) {
+        // If there's no video element, show Shop Now immediately
+        shopNowBtn.classList.remove("is-hidden");
+        shopNowBtn.style.display = "";
+        // Hide store link
+        if (storeLink) {
+          storeLink.style.display = "none";
+        }
       }
       return;
     }
@@ -161,10 +178,6 @@ document.addEventListener("DOMContentLoaded", () => {
     
     const isShopOpen = now >= opening && now <= closing;
     
-    // Get shop buttons/links
-    const shopNowBtn = document.getElementById("shopNowBtn");
-    const storeLink = document.querySelector(".store-link");
-    
     if (!isShopOpen) {
       // Hide shop elements when shop is closed
       if (shopNowBtn) {
@@ -175,14 +188,20 @@ document.addEventListener("DOMContentLoaded", () => {
         storeLink.style.display = "none";
       }
     } else {
-      // Show shop elements when shop is open (in case they were hidden)
+      // Show appropriate shop elements when shop is open
       if (shopNowBtn && homeVideo && homeVideo.currentTime >= 18.8) {
-        // Only show if video has reached the right timestamp
+        // Show Shop Now button when video reaches timestamp
         shopNowBtn.classList.remove("is-hidden");
         shopNowBtn.style.display = "";
-      }
-      if (storeLink) {
-        storeLink.style.display = "";
+        // Hide store link when Shop Now appears
+        if (storeLink) {
+          storeLink.style.display = "none";
+        }
+      } else {
+        // Before video timestamp, show store link
+        if (storeLink) {
+          storeLink.style.display = "";
+        }
       }
     }
   }
@@ -191,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (typeof SHOPIFY_CONFIG !== 'undefined') {
     checkShopStatus();
     
-    // Optional: Check every minute in case shop opens/closes while page is open
-    setInterval(checkShopStatus, 60000); // 60000ms = 1 minute
+    // Check every second to catch video timing and shop status changes
+    setInterval(checkShopStatus, 1000);
   }
 });
