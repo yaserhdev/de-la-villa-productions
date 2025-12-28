@@ -59,7 +59,7 @@ class ShopifyAPI {
                   }
                 }
               }
-              variants(first: 10) {
+              variants(first: 50) {
                 edges {
                   node {
                     id
@@ -70,6 +70,14 @@ class ShopifyAPI {
                     }
                     availableForSale
                     quantityAvailable
+                    selectedOptions {
+                      name
+                      value
+                    }
+                    image {
+                      url
+                      altText
+                    }
                   }
                 }
               }
@@ -185,7 +193,12 @@ class ShopifyAPI {
         title: edge.node.title,
         price: parseFloat(edge.node.priceV2.amount),
         available: edge.node.availableForSale,
-        quantityAvailable: edge.node.quantityAvailable
+        quantityAvailable: edge.node.quantityAvailable,
+        selectedOptions: edge.node.selectedOptions || [],
+        image: edge.node.image ? {
+          url: edge.node.image.url,
+          alt: edge.node.image.altText || product.title
+        } : null
       }))
     };
   }

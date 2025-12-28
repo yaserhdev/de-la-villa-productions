@@ -214,6 +214,119 @@ async function loadProducts() {
 
     productsGrid.innerHTML = products.map(product => createProductCard(product)).join('');
 
+    document.querySelectorAll('.color-select').forEach(select => {
+      select.addEventListener('change', (e) => {
+        const selectedColor = e.target.value;
+        const card = e.target.closest('.product-card');
+        const productData = JSON.parse(card.dataset.product);
+        const sizeSelect = card.querySelector('.size-select');
+        const quantitySelect = card.querySelector('.quantity-select');
+        const addToCartBtn = card.querySelector('.add-to-cart-btn');
+        const stockWarningContainer = card.querySelector('.stock-warning-container');
+        const productImage = card.querySelector('.product-image img');
+        
+        // Get selected size (or first available size if none selected)
+        const selectedSize = sizeSelect ? sizeSelect.value : null;
+        
+        // Find matching variant
+        let matchingVariant = null;
+        
+        if (selectedSize) {
+          // Both color and size exist
+          matchingVariant = productData.variants.find(v => {
+            const colorOption = v.selectedOptions.find(opt => opt.name === 'Color');
+            const sizeOption = v.selectedOptions.find(opt => opt.name === 'Size');
+            return colorOption && colorOption.value === selectedColor &&
+                   sizeOption && sizeOption.value === selectedSize;
+          });
+        } else {
+          // Only color exists (single size product)
+          matchingVariant = productData.variants.find(v => {
+            const colorOption = v.selectedOptions.find(opt => opt.name === 'Color');
+            return colorOption && colorOption.value === selectedColor;
+          });
+        }
+        
+        // Fallback: find any variant with the selected color
+        if (!matchingVariant) {
+          matchingVariant = productData.variants.find(v => {
+            const colorOption = v.selectedOptions.find(opt => opt.name === 'Color');
+            return colorOption && colorOption.value === selectedColor;
+          });
+        }
+        
+        if (matchingVariant) {
+          // Update product image if variant has its own image
+          if (matchingVariant.image && matchingVariant.image.url) {
+            productImage.src = matchingVariant.image.url;
+            productImage.alt = matchingVariant.image.alt || productData.title;
+          }
+          
+          // Update size options based on selected color
+          if (sizeSelect) {
+            const sizesForColor = productData.variants.filter(v => {
+              const colorOption = v.selectedOptions.find(opt => opt.name === 'Color');
+              return colorOption && colorOption.value === selectedColor;
+            });
+            
+            sizeSelect.innerHTML = sizesForColor.map(variant => {
+              const sizeOption = variant.selectedOptions.find(opt => opt.name === 'Size');
+              return `
+                <option value="${sizeOption.value}" 
+                        ${!variant.available ? 'disabled' : ''}
+                        data-variant-id="${variant.id}"
+                        data-stock="${variant.quantityAvailable}">
+                  ${sizeOption.value} ${!variant.available ? '(Out of Stock)' : ''}
+                </option>
+              `;
+            }).join('');
+            
+            // Trigger size change to update quantity and button
+            sizeSelect.dispatchEvent(new Event('change'));
+          } else {
+            // No size selector (single size product)
+            const stock = matchingVariant.quantityAvailable || 10;
+            
+            addToCartBtn.dataset.variantId = matchingVariant.id;
+            
+            quantitySelect.innerHTML = Array.from({length: stock}, (_, i) => i + 1)
+              .map(num => `<option value="${num}">${num}</option>`)
+              .join('');
+            
+            quantitySelect.value = '1';
+            addToCartBtn.dataset.quantity = '1';
+            
+            updateStockWarning(stockWarningContainer, stock);
+          }
+        }
+      });
+    });
+
+    document.querySelectorAll('.size-select').forEach(select => {
+      select.addEventListener('change', (e) => {
+        const selectedSize = e.target.value;
+        const selectedOption = e.target.options[e.target.selectedIndex];
+        const variantId = selectedOption.dataset.variantId;
+        const stock = parseInt(selectedOption.dataset.stock) || 10;
+        
+        const card = e.target.closest('.product-card');
+        const addToCartBtn = card.querySelector('.add-to-cart-btn');
+        const quantitySelect = card.querySelector('.quantity-select');
+        const stockWarningContainer = card.querySelector('.stock-warning-container');
+        
+        addToCartBtn.dataset.variantId = variantId;
+        
+        quantitySelect.innerHTML = Array.from({length: stock}, (_, i) => i + 1)
+          .map(num => `<option value="${num}">${num}</option>`)
+          .join('');
+        
+        quantitySelect.value = '1';
+        addToCartBtn.dataset.quantity = '1';
+        
+        updateStockWarning(stockWarningContainer, stock);
+      });
+    });
+
     document.querySelectorAll('.variant-select').forEach(select => {
       select.addEventListener('change', (e) => {
         const variantId = e.target.value;
@@ -378,10 +491,30 @@ function formatDescription(desc) {
 
 function createProductCard(product) {
   const defaultVariant = product.variants[0];
-  const imageSrc = product.images[0]?.url || 'https://via.placeholder.com/400x400?text=No+Image';
+  
+  // Use variant image if available, otherwise fall back to product image
+  const imageSrc = defaultVariant.image?.url || product.images[0]?.url || 'https://via.placeholder.com/400x400?text=No+Image';
+  
   const priceFormatted = shopifyAPI.formatPrice(product.price, product.currencyCode);
   
-  const hasVariants = product.variants.length > 1 && product.variants[0].title !== 'Default Title';
+  // Extract unique colors and sizes from variants
+  const colors = [];
+  const sizes = [];
+  
+  product.variants.forEach(variant => {
+    variant.selectedOptions.forEach(option => {
+      if (option.name === 'Color' && !colors.includes(option.value)) {
+        colors.push(option.value);
+      }
+      if (option.name === 'Size' && !sizes.includes(option.value)) {
+        sizes.push(option.value);
+      }
+    });
+  });
+  
+  const hasColors = colors.length > 0;
+  const hasSizes = sizes.length > 0;
+  const hasOldStyleVariants = product.variants.length > 1 && product.variants[0].title !== 'Default Title' && !hasColors && !hasSizes;
   
   // Add out-of-stock class if product is unavailable
   const outOfStockClass = !product.available ? 'is-out-of-stock' : '';
@@ -394,7 +527,7 @@ function createProductCard(product) {
 
   return `
     <div class="column is-full-mobile is-half-tablet is-one-third-fullhd">
-      <div class="product-card ${outOfStockClass}">
+      <div class="product-card ${outOfStockClass}" data-product='${JSON.stringify(product)}'>
         <figure class="product-image">
           <img src="${imageSrc}" alt="${product.title}">
         </figure>
@@ -405,9 +538,57 @@ function createProductCard(product) {
             <span class="subtitle has-text-white mb-4">${priceFormatted}</span>
             
             <div class="variant-selectors mb-4">
-              ${hasVariants ? `
+              ${hasColors ? `
+                <div class="field">
+                  <label class="label has-text-white">Color:</label>
+                  <div class="control">
+                    <div class="select">
+                      <select class="color-select" data-product-id="${product.id}">
+                        ${colors.map(color => `
+                          <option value="${color}">${color}</option>
+                        `).join('')}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              ` : ''}
+              
+              ${hasSizes ? `
                 <div class="field">
                   <label class="label has-text-white">Size:</label>
+                  <div class="control">
+                    <div class="select">
+                      <select class="size-select" data-product-id="${product.id}">
+                        ${(() => {
+                          // Get sizes for the default (first) color
+                          const defaultColor = colors[0] || null;
+                          const sizesForColor = product.variants.filter(v => {
+                            if (!defaultColor) return true;
+                            const colorOption = v.selectedOptions.find(opt => opt.name === 'Color');
+                            return colorOption && colorOption.value === defaultColor;
+                          });
+                          
+                          return sizesForColor.map(variant => {
+                            const sizeOption = variant.selectedOptions.find(opt => opt.name === 'Size');
+                            return `
+                              <option value="${sizeOption.value}" 
+                                      ${!variant.available ? 'disabled' : ''}
+                                      data-variant-id="${variant.id}"
+                                      data-stock="${variant.quantityAvailable}">
+                                ${sizeOption.value} ${!variant.available ? '(Out of Stock)' : ''}
+                              </option>
+                            `;
+                          }).join('');
+                        })()}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              ` : ''}
+              
+              ${hasOldStyleVariants ? `
+                <div class="field">
+                  <label class="label has-text-white">Option:</label>
                   <div class="control">
                     <div class="select">
                       <select class="variant-select" data-product-id="${product.id}">
@@ -423,6 +604,7 @@ function createProductCard(product) {
                   </div>
                 </div>
               ` : ''}
+              
               <div class="field">
                 <label class="label has-text-white">Qty:</label>
                 <div class="control">
