@@ -138,9 +138,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Check if shop is open and hide/show shop links
   function checkShopStatus() {
-    // Get shop buttons/links
+    // Get shop buttons/links (not the films link)
     const shopNowBtn = document.getElementById("shopNowBtn");
-    const storeLink = document.querySelector(".store-link");
+    const storeLink = document.querySelector(".store-link:not(.films-link)");
     
     // If not in limited drop mode, shop is always open
     if (!SHOPIFY_CONFIG.limitedDropMode) {
