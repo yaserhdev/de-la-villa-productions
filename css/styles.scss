@@ -242,6 +242,13 @@ img {
 // ============================================
 // STORE LINK (Mobile)
 // ============================================
+.links-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
 .films-link {
   margin-top: 3rem !important;
 }
@@ -1171,11 +1178,4 @@ img {
   .mixtape-tour p {
     padding-top: 15%;
   }
-}
-
-.links-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
 }
