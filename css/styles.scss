@@ -108,6 +108,15 @@ img {
   }
 }
 
+#navbarMenu {
+  background-color: #000000 !important;
+  
+  &.is-active {
+    background-color: #000000 !important;
+    border-top: 1px solid $theme-border;
+  }
+}
+
 // Logo - no background on hover
 .navbar-brand .navbar-item {
   background-color: transparent !important;
