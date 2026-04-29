@@ -7,6 +7,11 @@
   status = 301
   force = true
 
+  [[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
 # Cache static assets for 1 year
 [[headers]]
   for = "/assets/*"
