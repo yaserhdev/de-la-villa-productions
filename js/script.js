@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
       event.preventDefault();
 
       tabLinks.forEach(t => t.classList.remove("is-active"));
-      
+
       tab.classList.add("is-active");
 
       const tabName = tab.querySelector("a").textContent;
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const opening = new Date(SHOPIFY_CONFIG.shopOpeningDate);
           const closing = new Date(SHOPIFY_CONFIG.shopClosingDate);
           const isShopOpen = now >= opening && now <= closing;
-          
+
           if (isShopOpen) {
             shopNowBtn.classList.remove("is-hidden");
           }
@@ -83,12 +83,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const videoBackground = document.querySelector(".video-background");
 
   if (homeVideo && videoBackground) {
+    const isMobile = window.innerWidth <= 768;
+    homeVideo.src = isMobile
+      ? './assets/durant-commercial-mobile.mp4'
+      : './assets/durant-commercial.mp4';
+    homeVideo.load();
+
     // Force muted programmatically (some mobile browsers ignore the attribute)
     homeVideo.muted = true;
 
     const tryPlay = () => {
       homeVideo.muted = true;
-      homeVideo.play().catch(() => {});
+      homeVideo.play().catch(() => { });
     };
 
     homeVideo.addEventListener("canplay", () => {
@@ -109,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tryPlay();
     }, 1000);
   }
-  
+
   // if (homeVideo && videoBackground) {
   //   homeVideo.addEventListener("canplay", () => {
   //     videoBackground.classList.add("is-loaded");
@@ -169,14 +175,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Get shop buttons/links (not the films link)
     const shopNowBtn = document.getElementById("shopNowBtn");
     const storeLink = document.querySelector(".store-link:not(.films-link)");
-    
+
     // If not in limited drop mode, shop is always open
     if (!SHOPIFY_CONFIG.limitedDropMode) {
       // Store link is always visible initially
       if (storeLink) {
         storeLink.style.display = "";
       }
-      
+
       // For Shop Now button, respect the video timing (83.95s)
       if (shopNowBtn && homeVideo) {
         if (homeVideo.currentTime >= 83.95) {
@@ -198,14 +204,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       return;
     }
-    
+
     // Limited drop mode - use timing logic
     const now = new Date();
     const opening = new Date(SHOPIFY_CONFIG.shopOpeningDate);
     const closing = new Date(SHOPIFY_CONFIG.shopClosingDate);
-    
+
     const isShopOpen = now >= opening && now <= closing;
-    
+
     if (!isShopOpen) {
       // Hide shop elements when shop is closed
       if (shopNowBtn) {
@@ -237,7 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Run the check on page load
   if (typeof SHOPIFY_CONFIG !== 'undefined') {
     checkShopStatus();
-    
+
     // Check every second to catch video timing and shop status changes
     setInterval(checkShopStatus, 1000);
   }
