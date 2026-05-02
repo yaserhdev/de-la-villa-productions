@@ -83,23 +83,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const videoBackground = document.querySelector(".video-background");
 
   if (homeVideo && videoBackground) {
-  homeVideo.addEventListener("canplay", () => {
-    videoBackground.classList.add("is-loaded");
-    
-    const playPromise = homeVideo.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        // Autoplay blocked - force muted and retry
-        homeVideo.muted = true;
-        homeVideo.play();
-      });
-    }
-  });
+    // Force muted programmatically (some mobile browsers ignore the attribute)
+    homeVideo.muted = true;
 
-  setTimeout(() => {
-    videoBackground.classList.add("is-loaded");
-  }, 1000);
-}
+    const tryPlay = () => {
+      homeVideo.muted = true;
+      homeVideo.play().catch(() => {});
+    };
+
+    homeVideo.addEventListener("canplay", () => {
+      videoBackground.classList.add("is-loaded");
+      tryPlay();
+    });
+
+    homeVideo.addEventListener("loadedmetadata", () => {
+      tryPlay();
+    });
+
+    // Fallback on first user interaction
+    document.addEventListener("touchstart", tryPlay, { once: true });
+    document.addEventListener("click", tryPlay, { once: true });
+
+    setTimeout(() => {
+      videoBackground.classList.add("is-loaded");
+      tryPlay();
+    }, 1000);
+  }
   
   // if (homeVideo && videoBackground) {
   //   homeVideo.addEventListener("canplay", () => {
