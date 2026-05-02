@@ -82,49 +82,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const videoBackground = document.querySelector(".video-background");
 
-  if (homeVideo && videoBackground) {
-    const isMobile = window.innerWidth <= 768;
-    homeVideo.src = isMobile
-      ? './assets/durant-commercial-mobile.mp4'
-      : './assets/durant-commercial.mp4';
-    homeVideo.load();
-
-    // Force muted programmatically (some mobile browsers ignore the attribute)
-    homeVideo.muted = true;
-
-    const tryPlay = () => {
-      homeVideo.muted = true;
-      homeVideo.play().catch(() => { });
-    };
-
-    homeVideo.addEventListener("canplay", () => {
-      videoBackground.classList.add("is-loaded");
-      tryPlay();
-    });
-
-    homeVideo.addEventListener("loadedmetadata", () => {
-      tryPlay();
-    });
-
-    // Fallback on first user interaction
-    document.addEventListener("touchstart", tryPlay, { once: true });
-    document.addEventListener("click", tryPlay, { once: true });
-
-    setTimeout(() => {
-      videoBackground.classList.add("is-loaded");
-      tryPlay();
-    }, 1000);
-  }
-
   // if (homeVideo && videoBackground) {
+  //   const isMobile = window.innerWidth <= 768;
+  //   homeVideo.src = isMobile
+  //     ? './assets/durant-commercial-mobile.mp4'
+  //     : './assets/durant-commercial.mp4';
+  //   homeVideo.load();
+
+  //   // Force muted programmatically (some mobile browsers ignore the attribute)
+  //   homeVideo.muted = true;
+
+  //   const tryPlay = () => {
+  //     homeVideo.muted = true;
+  //     homeVideo.play().catch(() => { });
+  //   };
+
   //   homeVideo.addEventListener("canplay", () => {
   //     videoBackground.classList.add("is-loaded");
+  //     tryPlay();
   //   });
+
+  //   homeVideo.addEventListener("loadedmetadata", () => {
+  //     tryPlay();
+  //   });
+
+  //   // Fallback on first user interaction
+  //   document.addEventListener("touchstart", tryPlay, { once: true });
+  //   document.addEventListener("click", tryPlay, { once: true });
 
   //   setTimeout(() => {
   //     videoBackground.classList.add("is-loaded");
+  //     tryPlay();
   //   }, 1000);
   // }
+
+  if (homeVideo && videoBackground) {
+    homeVideo.addEventListener("canplay", () => {
+      videoBackground.classList.add("is-loaded");
+    });
+
+    setTimeout(() => {
+      videoBackground.classList.add("is-loaded");
+    }, 1000);
+  }
 
   const contactForm = document.querySelector("form[action*=\"formspree\"]");
   const successModal = document.getElementById("success-modal");
