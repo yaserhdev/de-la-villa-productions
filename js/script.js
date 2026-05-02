@@ -81,16 +81,35 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const videoBackground = document.querySelector(".video-background");
-  
-  if (homeVideo && videoBackground) {
-    homeVideo.addEventListener("canplay", () => {
-      videoBackground.classList.add("is-loaded");
-    });
 
-    setTimeout(() => {
-      videoBackground.classList.add("is-loaded");
-    }, 1000);
-  }
+  if (homeVideo && videoBackground) {
+  homeVideo.addEventListener("canplay", () => {
+    videoBackground.classList.add("is-loaded");
+    
+    const playPromise = homeVideo.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Autoplay blocked - force muted and retry
+        homeVideo.muted = true;
+        homeVideo.play();
+      });
+    }
+  });
+
+  setTimeout(() => {
+    videoBackground.classList.add("is-loaded");
+  }, 1000);
+}
+  
+  // if (homeVideo && videoBackground) {
+  //   homeVideo.addEventListener("canplay", () => {
+  //     videoBackground.classList.add("is-loaded");
+  //   });
+
+  //   setTimeout(() => {
+  //     videoBackground.classList.add("is-loaded");
+  //   }, 1000);
+  // }
 
   const contactForm = document.querySelector("form[action*=\"formspree\"]");
   const successModal = document.getElementById("success-modal");
